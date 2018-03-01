@@ -510,10 +510,8 @@ footer
     line-height 28px
     margin 12px
 
-.fadeIn-enter-active,
-.fadeIn-leave-active
-  transition  all .3s
-.fadeIn-enter,
-.fadeIn-leave-to
+.fadeIn-enter-active,.fadeIn-leave-active
+  transition opacity  .5s
+.fadeIn-enter,.fadeIn-leave-to
   opacity 0
 </style>

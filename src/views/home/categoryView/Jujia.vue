@@ -32,10 +32,8 @@ export default {
 <style lang="stylus" scoped>
 .jujia
   padding-top 75px
-.fadeIn-enter-active,
-.fadeIn-leave-active
-  transition  all .3s
-.fadeIn-enter,
-.fadeIn-leave-to
+.fadeIn-enter-active,.fadeIn-leave-active
+  transition  opacity  .5s
+.fadeIn-enter,.fadeIn-leave-to
   opacity 0
 </style>

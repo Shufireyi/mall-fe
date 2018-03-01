@@ -8,9 +8,13 @@ export default new Router({
   routes: [
     {
       path: '/',
+      redirect: 'home'
+    },
+    {
+      path: '/home',
       name: 'Home',
       component: () => import('../views/home/Home.vue'),
-      redirect: 'Recommend',
+      redirect: '/home/recommend',
       children: [
         {
           path: 'recommend',
@@ -70,9 +74,37 @@ export default new Router({
       ]
     },
     {
-      path: '/hello',
-      name: 'Hello',
-      component: () => import('../components/HelloWorld.vue')
+      path: '/shiwu',
+      name: 'Shiwu',
+      component: () => import('../views/shiwu/Shiwu.vue')
+    },
+    {
+      path: '/categories',
+      name: 'Category',
+      component: () => import('../views/category/Category.vue'),
+      // redirect: '/categories/1022001',
+      children: [{
+        path: ':id',
+        name: 'SubCategoryList',
+        component: () => import('../views/category/SubCategoryList.vue')
+      }]
+    },
+    {
+      path: '/shopcart',
+      name: 'ShopCart',
+      component: () => import('../views/shopCart/ShopCart.vue')
+    },
+    {
+      path: '/person',
+      name: 'Person',
+      component: () => import('../views/person/Person.vue')
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })

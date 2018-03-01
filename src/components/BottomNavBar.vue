@@ -1,14 +1,14 @@
 <template>
   <div class="navbar">
-    <a href="#"
+    <router-link
       v-for="(link, index) in links"
       :key="index"
       class="navbar-link-item"
       :class="link.class"
-      @click="changeNav(index)">
+      :to="{name:routerName(link)}">
       <div class="icon"></div>
       <span class="name">{{ link.name }}</span>
-    </a>
+    </router-link>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
         name: '分类'
       }, {
         class: 'gouwu',
-        name: '购物'
+        name: '购物车'
       }, {
         class: 'geren',
         name: '个人'
@@ -39,12 +39,19 @@ export default {
     document.querySelectorAll('.navbar-link-item')[0].classList.add('active')
   },
   methods: {
-    changeNav (index) {
-      const allLink = document.querySelectorAll('.navbar-link-item')
-      allLink.forEach(element => {
-        element.classList.remove('active')
-      })
-      allLink[index].classList.add('active')
+    routerName (item) {
+      switch (item.name) {
+        case '识物':
+          return 'Shiwu'
+        case '分类':
+          return 'Category'
+        case '购物车':
+          return 'ShopCart'
+        case '个人':
+          return 'Person'
+        default:
+          return 'Home'
+      }
     }
   }
 }
@@ -69,7 +76,7 @@ export default {
   vertical-align middle
   height 72px
   text-align center
-  &.active
+  &.router-link-active
     color #b4282d
   .name
     margin 7px 0 0 0
@@ -84,22 +91,22 @@ export default {
     margin  0 auto
   &.shouye .icon
     background-position 0 -250px
-  &.shouye.active .icon
+  &.shouye.router-link-active .icon
     background-position 0 -200px
   &.shiwu .icon
     background-position 0 -350px
-  &.shiwu.active .icon
+  &.shiwu.router-link-active .icon
     background-position 0 -300px
   &.fenlei .icon
     background-position 0 -150px
-  &.fenlei.active .icon
+  &.fenlei.router-link-active .icon
     background-position 0 -100px
   &.gouwu .icon
     background-position 0 -50px
-  &.gouwu.active .icon
+  &.gouwu.router-link-active .icon
     background-position 0 0
   &.geren .icon
     background-position 0 -450px
-  &.geren.active .icon
+  &.geren.router-link-active .icon
     background-position 0 -400px
 </style>

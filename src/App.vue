@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <router-view/>
+    <!-- <transition name="fadeIn"> -->
+      <keep-alive>
+        <router-view class="marginBottom"></router-view>
+      </keep-alive>
+    <!-- </transition> -->
+    <nav-bar></nav-bar>
     <transition name='fadeIn'>
       <div class="goTop" @click.stop.prevent="scrollToTop" v-if="showGoTop">
         <i class="fa fa-angle-top"></i>
@@ -10,8 +15,13 @@
 </template>
 
 <script>
+import NavBar from './components/BottomNavBar'
+
 export default {
   name: 'App',
+  components: {
+    NavBar
+  },
   data () {
     return {
       showGoTop: false
@@ -92,7 +102,7 @@ img {
 
 .fadeIn-enter-active,
 .fadeIn-leave-active
-  transition  all .5s
+  transition  opacity  .3s
 
 .fadeIn-enter,
 .fadeIn-leave-to

@@ -9,12 +9,9 @@
       </div>
       <slider-link  v-if="categoryLinks.length" :links="categoryLinks" @clickLink="clickLink"></slider-link>
     </div>
-    <transition name="fadeIn">
-      <keep-alive>
-        <router-view class="marginBottom"></router-view>
-      </keep-alive>
-    </transition>
-    <nav-bar></nav-bar>
+    <keep-alive>
+      <router-view class="marginBottom"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -22,12 +19,10 @@
 import HomeAPI from '../../service/home'
 import GoodsAPI from '../../service/goods'
 import SliderLink from '../../components/SlideLink'
-import NavBar from '../../components/BottomNavBar'
 
 export default {
   components: {
-    SliderLink,
-    NavBar
+    SliderLink
   },
   data () {
     return {
@@ -100,11 +95,4 @@ export default {
 .marginBottom
   margin-bottom  98px
   min-height 100vh
-
-.fadeIn-enter-active,
-.fadeIn-leave-active
-  transition  opacity .3s
-.fadeIn-enter,
-.fadeIn-leave-to
-  opacity 0
 </style>

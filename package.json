@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "better-scroll": "^1.8.2",
     "cssnano": "^3.10.0",
     "cube-ui": "^1.4.3",
     "fastclick": "^1.0.6",

@@ -34,7 +34,7 @@ export default {
   padding-top 75px
 .fadeIn-enter-active,
 .fadeIn-leave-active
-  transition  all .3s
+  transition  all .5s
 .fadeIn-enter,
 .fadeIn-leave-to
   opacity 0
