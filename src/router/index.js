@@ -16,6 +16,56 @@ export default new Router({
           path: 'recommend',
           name: 'Recommend',
           component: () => import('../views/home/recommend/Recommend.vue')
+        },
+        {
+          path: 'jujia',
+          name: 'Jujia',
+          component: () => import('../views/home/categoryView/Jujia.vue')
+        },
+        {
+          path: 'canchu',
+          name: 'Canchu',
+          component: () => import('../views/home/categoryView/Canchu.vue')
+        },
+        {
+          path: 'dianqi',
+          name: 'Dianqi',
+          component: () => import('../views/home/categoryView/Dianqi.vue')
+        },
+        {
+          path: 'fuzhuang',
+          name: 'Fuzhuang',
+          component: () => import('../views/home/categoryView/Fuzhuang.vue')
+        },
+        {
+          path: 'peijian',
+          name: 'Peijian',
+          component: () => import('../views/home/categoryView/Peijian.vue')
+        },
+        {
+          path: 'tese',
+          name: 'Tese',
+          component: () => import('../views/home/categoryView/Tese.vue')
+        },
+        {
+          path: 'wenti',
+          name: 'Wenti',
+          component: () => import('../views/home/categoryView/Wenti.vue')
+        },
+        {
+          path: 'xihu',
+          name: 'Xihu',
+          component: () => import('../views/home/categoryView/Xihu.vue')
+        },
+        {
+          path: 'yingtong',
+          name: 'Yingtong',
+          component: () => import('../views/home/categoryView/Yingtong.vue')
+        },
+        {
+          path: 'yinshi',
+          name: 'Yinshi',
+          component: () => import('../views/home/categoryView/Yinshi.vue')
         }
       ]
     },

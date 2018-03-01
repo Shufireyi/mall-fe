@@ -15,18 +15,22 @@ export default {
     }
   },
   mounted () {
-    this._initScroll()
+    setTimeout(() => {
+      this._initScroll()
+    }, 20)
   },
   watch: {
     data () {
-      this._initScroll()
+      setTimeout(() => {
+        this._initScroll()
+      }, 20)
     }
   },
   methods: {
     _initScroll () {
       if (this.data.length) {
         setTimeout(() => {
-          if (!this.Scroll) {
+          if (!this.cateScroll) {
             this.cateScroll = new BetterScroll(this.$refs.scrollWrapper, {
               scrollX: true,
               eventPassthrough: 'vertical',
@@ -34,7 +38,7 @@ export default {
               swipeTime: 2000
             })
           } else {
-            this.Scroll.refresh()
+            this.cateScroll.refresh()
           }
         }, 20)
       }

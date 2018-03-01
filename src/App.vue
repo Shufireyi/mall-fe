@@ -29,7 +29,6 @@ export default {
         } else if (document.body) {
           yScroll = document.body.scrollTop
         }
-        console.log(yScroll)
         this.showGoTop = window.innerHeight < yScroll
       }, 50)
     })
@@ -79,7 +78,7 @@ img {
 #app
   width 100%
   overflow hidden
-
+  background #f4f4f4
 .goTop
   position fixed
   bottom 120px

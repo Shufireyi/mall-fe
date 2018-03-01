@@ -1,6 +1,9 @@
 <template>
-  <div class="wrapper" v-if="bannerData.length">
-    <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
+  <div class="wrapper">
+    <loading v-if="!bannerData.length"></loading>
+    <transition name="fadeIn">
+      <div v-if="bannerData.length > 0">
+      <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
       <swiper-slide  v-for="(item, index) of bannerData" class="swiper-slide content" :key="index">
         <router-link  :to="{name: 'Home'}" tag="p">
           <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
@@ -98,12 +101,13 @@
         </a>
       </div>
     </div>
-    <nav-bar></nav-bar>
     <footer>
       <p>XX公司版权所有&nbsp;&copy;&nbsp;1999-2018</p>
       <p>经营许可证： JY13301080111111</p>
       <p>All Rights Reserved. 备案号：苏ICP备11111111号-1</p>
     </footer>
+    </div>
+    </transition>
   </div>
 </template>
 
@@ -112,15 +116,15 @@ import HomeAPI from '../../../service/home'
 import horizontalScroll from './HorizontalScroll'
 import LimitTimeSale from './LimitTime'
 import FuliShe from './Fulishe'
-import GoodInfo from './GoodInfo'
-import NavBar from '../../../components/BottomNavBar'
+import GoodInfo from '../../home/GoodInfo'
+import Loading from '../../../components/Loading'
 export default {
   components: {
     horizontalScroll,
     LimitTimeSale,
     FuliShe,
     GoodInfo,
-    NavBar
+    Loading
   },
   data () {
     return {
@@ -252,7 +256,7 @@ export default {
 
 <style lang="stylus" scoped>
 .wrapper
-  background-color #f4f4f4
+  background #f4f4f4
 .swiper-box
   width 100%
   overflow hidden
@@ -501,8 +505,15 @@ footer
   font-size 20px
   text-align center
   padding 20px 0
-  margin-bottom 98px
+  // margin-bottom 98px
   p
     line-height 28px
     margin 12px
+
+.fadeIn-enter-active,
+.fadeIn-leave-active
+  transition  all .3s
+.fadeIn-enter,
+.fadeIn-leave-to
+  opacity 0
 </style>

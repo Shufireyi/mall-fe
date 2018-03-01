@@ -34,6 +34,9 @@ export default {
   },
   computed: {
     remainTime () {
+      if (!this.limitSale) {
+        return
+      }
       if (this.limitSale.remainTime) {
         return getTimeFromSeconds(this.limitSale.remainTime)
       }
@@ -47,16 +50,16 @@ export default {
       } else {
         this.limitSale = res.data.data
         this.nextTime = formatTime(this.limitSale.nextStartTime, 'hh:mm')
+        this.timer = setInterval(() => {
+          if (this.limitSale.remainTime <= 0) {
+            this.limitSale.remainTime = 0
+            clearInterval(this.timer)
+          } else {
+            this.limitSale.remainTime -= 1000
+          }
+        }, 1000)
       }
     })
-    this.timer = setInterval(() => {
-      if (this.limitSale.remainTime <= 0) {
-        this.limitSale.remainTime = 0
-        clearInterval(this.timer)
-      } else {
-        this.limitSale.remainTime -= 1000
-      }
-    }, 1000)
   },
   destroyed () {
     if (this.timer) {
