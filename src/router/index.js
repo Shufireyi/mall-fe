@@ -82,7 +82,6 @@ export default new Router({
       path: '/categories',
       name: 'Category',
       component: () => import('../views/category/Category.vue'),
-      // redirect: '/categories/1022001',
       children: [{
         path: ':id',
         name: 'SubCategoryList',

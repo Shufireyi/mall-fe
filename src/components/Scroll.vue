@@ -91,7 +91,9 @@ export default {
         probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX,
-        bounceTime: 400
+        bounceTime: 400,
+        deceleration: 0.005,
+        swipeTime: 2000
       })
 
       // 是否派发滚动事件

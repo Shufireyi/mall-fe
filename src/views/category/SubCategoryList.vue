@@ -1,5 +1,7 @@
 <template>
-  <scroll :data="sublinks">
+  <div>
+    <loading v-if="!sublinks.length"></loading>
+    <scroll :data="sublinks" v-if="sublinks.length > 0">
     <div class="wrapper">
       <div class="imgWrapper">
         <img v-lazy="bannerURL">
@@ -10,22 +12,24 @@
         <span class="after"></span>
       </p>
       <div class="subWrapper" v-if="sublinks.length">
-        <div v-for="(item, index) in sublinks" :key="index">
+        <div v-for="(item, index) in sublinks" :key="item.name + index" class="subLinkItem">
           <img v-lazy=" item.wapBannerUrl + '?imageView&quality=85&thumbnail=144x144'">
           <div class="title">{{ item.name }}</div>
         </div>
       </div>
     </div>
   </scroll>
+  </div>
 </template>
 
 <script>
 import CategoryAPI from '../../service/category'
 import Scroll from '../../components/Scroll'
-
+import Loading from '../../components/Loading'
 export default {
   components: {
-    Scroll
+    Scroll,
+    Loading
   },
   data () {
     return {
@@ -114,6 +118,7 @@ export default {
     width 144px
     overflow hidden
     margin 0 34px 0 0
+    vertical-align top
     &:nth-child(3n+0)
       margin 0
     img

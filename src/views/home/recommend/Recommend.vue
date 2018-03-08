@@ -4,7 +4,7 @@
     <transition name="fadeIn">
       <div v-if="bannerData.length > 0">
       <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
-      <swiper-slide  v-for="(item, index) of bannerData" class="swiper-slide content" :key="index">
+      <swiper-slide  v-for="(item, index) in bannerData" class="swiper-slide content" :key="index">
         <router-link  :to="{name: 'Home'}" tag="p">
           <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
         </router-link>
@@ -113,7 +113,7 @@
 
 <script>
 import HomeAPI from '../../../service/home'
-import horizontalScroll from './HorizontalScroll'
+import horizontalScroll from '../../../components/HorizontalScroll'
 import LimitTimeSale from './LimitTime'
 import FuliShe from './Fulishe'
 import GoodInfo from '../../home/GoodInfo'
