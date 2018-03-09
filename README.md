@@ -1,6 +1,7 @@
 # mall-fe
 
 > A Vue.js project
+> 高访网易严选
 
 ## Build Setup
 
