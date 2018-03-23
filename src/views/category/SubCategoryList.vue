@@ -1,24 +1,24 @@
 <template>
   <div>
     <loading v-if="!sublinks.length"></loading>
-    <scroll :data="sublinks" v-if="sublinks.length > 0">
-    <div class="wrapper">
-      <div class="imgWrapper">
-        <img v-lazy="bannerURL">
-      </div>
-      <p class="title">
-        <span class="before"></span>
-        {{name}}分类
-        <span class="after"></span>
-      </p>
-      <div class="subWrapper" v-if="sublinks.length">
-        <div v-for="(item, index) in sublinks" :key="item.name + index" class="subLinkItem">
-          <img v-lazy=" item.wapBannerUrl + '?imageView&quality=85&thumbnail=144x144'">
-          <div class="title">{{ item.name }}</div>
+    <scroll :data="sublinks" v-if="sublinks.length > 0" style="height:100%">
+      <div class="wrapper">
+        <div class="imgWrapper">
+          <img v-lazy="bannerURL">
+        </div>
+        <p class="title">
+          <span class="before"></span>
+          {{name}}分类
+          <span class="after"></span>
+        </p>
+        <div class="subWrapper" v-if="sublinks.length">
+          <div v-for="(item, index) in sublinks" :key="item.name + index" class="subLinkItem">
+            <img v-lazy=" item.wapBannerUrl + '?imageView&quality=85&thumbnail=144x144'">
+            <div class="title">{{ item.name }}</div>
+          </div>
         </div>
       </div>
-    </div>
-  </scroll>
+    </scroll>
   </div>
 </template>
 
@@ -31,34 +31,33 @@ export default {
     Scroll,
     Loading
   },
-  data () {
+  data() {
     return {
       sublinks: []
     }
   },
-  mounted () {
+  mounted() {
     this._initSubCate()
   },
   computed: {
-    bannerURL () {
+    bannerURL() {
       return `${this.$route.params.banner}?imageView&thumbnail=0x196&quality=75`
     },
-    name () {
+    name() {
       return this.$route.params.name
     }
   },
   watch: {
-    '$route' () {
+    '$route'() {
       this._initSubCate()
     }
   },
   methods: {
-    _initSubCate () {
+    _initSubCate() {
       if (!this.$route.params.subcate) {
         return
       }
       if (this.$route.params.subcate.length === 0) {
-        console.log(this.$route.params.id)
         CategoryAPI.getSubCategory(this.$route.params.id).then(res => {
           this.sublinks = res.data.data
         })
@@ -67,11 +66,18 @@ export default {
       }
     }
   },
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     if (!from.name) {
       window.location.href = '/categories'
     }
     next()
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'Category') {
+      this.$router.go(-1)
+    } else {
+      next()
+    }
   }
 }
 </script>

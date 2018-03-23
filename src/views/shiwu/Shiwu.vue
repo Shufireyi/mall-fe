@@ -4,7 +4,7 @@
       <swiper-slide  v-for="(item, index) in banner" class="swiper-slide content" :key="index">
         <router-link  :to="{name: 'Home'}" tag="p">
           <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
-          <div class="info" v-if="item.color">
+          <div class="info" v-if="item.desc">
             <div class="cate"><span class="before"></span>{{ item.subTitle }}<span class="after"></span></div>
             <div class="title">{{ item.title }}</div>
             <div class="desc">{{ item.desc }}</div>
@@ -159,7 +159,6 @@ export default {
         this.zhen = [res.data.data.zhenOne, res.data.data.zhenTwo, res.data.data.zhenThree]
         this.yxLook = res.data.data.yxLook
         this.tenfifteen = res.data.data.tenfifteen
-        console.log(this.yxLook)
       }
     })
   },
@@ -308,7 +307,7 @@ export default {
         top 20px
         left 20px
         height 36px
-        background white
+        background rgba(255, 255, 255, .9)
         border 1px solid #d9d9d9
         border-radius 18px
         font-size 24px
@@ -389,7 +388,7 @@ export default {
         top 10px
         left 10px
         height 36px
-        background white
+        background rgba(255, 255, 255, .9)
         border 1px solid #d9d9d9
         border-radius 18px
         font-size 24px

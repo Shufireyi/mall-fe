@@ -10,70 +10,73 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/category': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/bannerdata': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/taglistfour': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/getnewgoods': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/populargoods': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/limittimesale': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/fulisale': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/diffcatesale': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/goods/*': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/category/*': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      },
-      '/shiwuapi/*': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false
-      }
-    },
-    // proxy: {
+    // proxyTable: {
     //   '/category': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/bannerdata': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/taglistfour': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/getnewgoods': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/populargoods': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/limittimesale': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/fulisale': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/diffcatesale': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/goods/*': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/category/*': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true,
+    //     secure: false
+    //   },
+    //   '/shiwuapi/*': {
     //     target: 'http://localhost:3000',
     //     changeOrigin: true,
     //     secure: false
     //   }
     // },
+
+    proxyTable: {
+      '/api': {
+        target: 'http://127.0.0.1:3000',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: '0.0.0.0', // can be overwritten by process.env.HOST
