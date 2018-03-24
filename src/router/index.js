@@ -81,12 +81,7 @@ export default new Router({
     {
       path: '/categories',
       name: 'Category',
-      component: () => import('../views/category/Category.vue'),
-      children: [{
-        path: ':id',
-        name: 'SubCategoryList',
-        component: () => import('../views/category/SubCategoryList.vue')
-      }]
+      component: () => import('../views/category/Category.vue')
     },
     {
       path: '/shopcart',
@@ -97,6 +92,11 @@ export default new Router({
       path: '/person',
       name: 'Person',
       component: () => import('../views/person/Person.vue')
+    },
+    {
+      path: '/brand',
+      name: 'Brand',
+      component: () => import('../views/home/recommend/subView/Brand.vue')
     }
   ],
   scrollBehavior (to, from, savedPosition) {

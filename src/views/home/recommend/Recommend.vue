@@ -17,7 +17,7 @@
       <div class="item"><i class="icon"></i>48小时快速退款</div>
     </div>
     <div class="tagList">
-      <p class="title">品牌制造商直供<i class="fa fa-angle-right"></i></p>
+      <p class="title" @click="goToBrand">品牌制造商直供<i class="fa fa-angle-right"></i></p>
       <div class="tabItem" v-for="(item, index) in tagListFour" :key="index">
         <p class="name">{{item.name}}</p>
         <p class="price">{{item.floorPrice}}元起</p>
@@ -212,6 +212,11 @@ export default {
     })
   },
   methods: {
+    goToBrand() {
+      this.$router.push({
+        name: 'Brand'
+      })
+    },
     adjustImage () {
       setTimeout(() => {
         let arr = document.querySelectorAll('.adaptHeightImg')

@@ -24,7 +24,10 @@
             <div class="info">
               <p class="name">{{ goodsItem.itemName }}</p>
               <p class="kind">{{ goodsItem.specList[0].specValue }}</p>
-              <p class="price">&yen;{{ goodsItem.actualPrice }}</p>
+              <p class="price">&yen;{{ goodsItem.actualPrice | formatPrice }}</p>
+              <number-picker :number="goodsItem.cnt" class="numberPicker"
+                @minus="minusGoodsNum(goodsItem, index)"
+                @add="addGoodsNum(goodsItem, index)"></number-picker>
             </div>
             <div class="deleteItem" @click="deleteGoodItem(goodsItem, index)">
               <i></i>
@@ -36,17 +39,21 @@
           <i :class="checkedAll ? 'checked' : ''" @click="checkedALL"></i>
           <span class="selectedNum">已选({{ totalCount }})</span>
           <div>
-            <span class="price">&yen;{{ totalCost }}</span>
+            <span class="price">&yen;{{ totalCost | formatPrice }}</span>
             <button class="takeOrder" :class="totalCount > 0 ? 'canTakeOrder' : ''" :disabled="totalCount > 0 ? false : true">下单</button>
           </div>
         </div>
       </div>
       <div v-else key="noGoods" class="noGoods"></div>
     </transition>
+    <cube-popup type="my-popup" ref="myPopup" :mask="false">
+      不能再少啦！
+    </cube-popup>
   </div>
 </template>
 
 <script>
+import NumberPicker from '../../components/NumberPicker'
 const goodsList = [
   {
     actualPrice: 1599,
@@ -82,6 +89,9 @@ const goodsList = [
   }
 ]
 export default {
+  components: {
+    NumberPicker
+  },
   data() {
     return {
       goodsList
@@ -147,6 +157,23 @@ export default {
           item.checked = true
         })
       }
+    },
+    minusGoodsNum(goodsItem, index) {
+      if (this.goodsList[index].cnt > 1) {
+        this.goodsList[index].cnt--
+      } else {
+        this.showPopup('myPopup')
+      }
+    },
+    addGoodsNum(goodsItem, index) {
+      this.goodsList[index].cnt++
+    },
+    showPopup(refId) {
+      const component = this.$refs[refId]
+      component.show()
+      setTimeout(() => {
+        component.hide()
+      }, 1000)
     }
   }
 }
@@ -260,6 +287,12 @@ header
         text-overflow ellipsis
         white-space nowrap
         overflow hidden
+      .numberPicker
+        position absolute
+        height 52px
+        width 235px
+        right 30px
+        top 121px
     .deleteItem
       background #e83a3a
       width 140px
@@ -335,4 +368,17 @@ header
   transition all .2s
 .fade-enter, .fade-leave-to
   opacity 0
+
+.cube-my-popup
+  top 50%
+  left 50%
+  padding-left 20px
+  background rgba(0, 0, 0, 0.5)
+  color #eee
+  width 280px
+  height 100px
+  border-radius 8px
+  transform translate3d(-140px,-50px,0)
+  text-align center
+  box-sizing border-box
 </style>
