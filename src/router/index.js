@@ -97,9 +97,19 @@ export default new Router({
       path: '/brand',
       name: 'Brand',
       component: () => import('../views/home/recommend/subView/Brand.vue')
+    },
+    {
+      path: '/brand/:id',
+      name: 'BrandDetail',
+      component: () => import('../views/home/recommend/subView/BrandDetail.vue')
+    },
+    {
+      path: '/goodsdetail/:id',
+      name: 'GoodsDetail',
+      component: () => import('../components/GoodsDetail.vue')
     }
   ],
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {

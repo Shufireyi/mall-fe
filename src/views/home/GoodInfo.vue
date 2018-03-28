@@ -1,5 +1,6 @@
 <template>
-  <div v-if="good" class="wrapper">
+  <router-link v-if="good" class="wrapper" tag="div"
+    :to="{ name: 'GoodsDetail', params: { id: good.id }}">
     <div class="img">
       <img v-lazy="good.listPicUrl + '?imageView&amp;quality=65&amp;thumbnail=330x330'" alt="">
       <div class="desc">{{ good.simpleDesc }}</div>
@@ -20,7 +21,7 @@
       <div class="name">{{ good.name }}</div>
       <div class="price">&yen;{{ good.retailPrice }}</div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>

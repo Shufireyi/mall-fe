@@ -80,6 +80,9 @@ export default {
     setTimeout(() => {
       this._initScroll()
     }, 20)
+    this.$nextTick(() => {
+      this.$emit('finish')
+    })
   },
   methods: {
     _initScroll() {
@@ -157,7 +160,6 @@ export default {
     data() {
       setTimeout(() => {
         this.refresh()
-        this.$emit('finish')
       }, this.refreshDelay)
     }
   }

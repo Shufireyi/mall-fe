@@ -7,6 +7,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueLazyload from 'vue-lazyload'
 import FastClick from 'fastclick'
 import formatPrice from './utils/formatPrice'
+import { formatTime } from './utils/time'
 import 'font-awesome/css/font-awesome.min.css'
 import {
   // eslint-disable-next-line
@@ -26,6 +27,7 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 Vue.filter('formatPrice', formatPrice)
+Vue.filter('formatTime', formatTime)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

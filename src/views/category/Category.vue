@@ -70,10 +70,9 @@ export default {
   },
   methods: {
     activeFirst() {
-      if (!this.mainCate.length) {
-      } else {
+      this.$nextTick(() => {
         this.changeSub(this.mainCate[0], 0)
-      }
+      })
     },
     changeSub(item, index) {
       if (!item) {

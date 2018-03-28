@@ -1,9 +1,23 @@
 <template>
   <b-scroll ref="scroll" :data="brandList" :pullup="true" @scrollToEnd="onPullingUp" class="wrapper">
     <div>
-      <div v-for="item in brandList" :key="item.id" class="brandItem">
+      <router-link v-for="item in brandList" :key="item.id"
+        class="brandItem"
+        :to="{
+          name: 'BrandDetail',
+          params: {
+            id: item.id
+          },
+          query: {
+            appListPicUrl:item.appListPicUrl,
+            name: item.name,
+            simpleDesc: item.simpleDesc
+            }
+        }"
+        tag="div">
         <div class="imgWrapper">
           <img v-lazy="item.appListPicUrl + '?imageView&quality=65'">
+          <div class="triangle"></div>
         </div>
         <div class="info">
           <div class="name">{{ item.name }}
@@ -16,7 +30,7 @@
             <img v-lazy="img.listPicUrl + '?imageView&quality=65'">
           </span>
         </div>
-      </div>
+      </router-link>
       <div class="hasMore" v-if="hasMore && firstShow">上拉加载...</div>
       <div class="hasMore" v-if="!hasMore && firstShow">没有数据啦^_^</div>
       <loading v-if="loading" class="loading"></loading>
@@ -39,7 +53,8 @@ export default {
       itemIndex: 0,
       hasMore: false,
       firstShow: false,
-      loading: true
+      loading: true,
+      canFresh: true
     }
   },
   mounted() {
@@ -62,11 +77,13 @@ export default {
   },
   methods: {
     onPullingUp() {
-      if (!this.hasMore) {
+      if (!this.hasMore || !this.canFresh) {
         return
       }
       // 更新数据
+      this.canFresh = false
       this.loading = true
+
       BrandAPI.getBrandList({
         limitOffset: this.brandList.length,
         limitSize: 20
@@ -82,6 +99,7 @@ export default {
             this.hasMore = false
           }
         }
+        this.canFresh = true
       })
     }
   },
@@ -106,9 +124,18 @@ export default {
   .imgWrapper
     width 100%
     height 320px
+    position relative
     img
       width 100%
       height 100%
+    .triangle
+      position absolute
+      width 40px
+      height 40px
+      bottom -30px
+      left 66px
+      background white
+      transform rotateZ(45deg)
   .info
     padding 34px 30px 0 30px
     background-color white

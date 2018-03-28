@@ -73,9 +73,10 @@ header
   height 270px
   padding  0 30px
   box-sizing border-box
-  background-image url('http://yanxuan.nosdn.127.net/6ae93353e95b3450a2710bb43f925a63.jpg')
   display flex
   align-items center
+  background-image url('http://yanxuan.nosdn.127.net/6ae93353e95b3450a2710bb43f925a63.jpg')
+  background-color #1e1e1e
   .avatar
     width 142px
     height 142px

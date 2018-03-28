@@ -3,110 +3,120 @@
     <loading v-if="!bannerData.length"></loading>
     <transition name="fadeIn">
       <div v-if="bannerData.length > 0">
-      <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
-      <swiper-slide  v-for="(item, index) in bannerData" class="swiper-slide content" :key="index">
-        <router-link  :to="{name: 'Home'}" tag="p">
-          <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
-        </router-link>
-      </swiper-slide>
-      <div class="swiper-pagination"  slot="pagination"></div>
-    </swiper>
-    <div class="adv">
-      <div class="item"><i class="icon"></i>网易自营品牌</div>
-      <div class="item"><i class="icon"></i>30天无忧退货</div>
-      <div class="item"><i class="icon"></i>48小时快速退款</div>
-    </div>
-    <div class="tagList">
-      <p class="title" @click="goToBrand">品牌制造商直供<i class="fa fa-angle-right"></i></p>
-      <div class="tabItem" v-for="(item, index) in tagListFour" :key="index">
-        <p class="name">{{item.name}}</p>
-        <p class="price">{{item.floorPrice}}元起</p>
-        <p class="new" v-if="item.newOnShelf"></p>
-        <img v-lazy="item.picUrl + '?imageView&amp;thumbnail=355x0&amp;quality=65'">
+        <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
+          <swiper-slide v-for="(item, index) in bannerData" class="swiper-slide content" :key="index">
+            <router-link :to="{name: 'Home'}" tag="p">
+              <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
+            </router-link>
+          </swiper-slide>
+          <div class="swiper-pagination" slot="pagination"></div>
+        </swiper>
+        <div class="adv">
+          <div class="item">
+            <i class="icon"></i>网易自营品牌</div>
+          <div class="item">
+            <i class="icon"></i>30天无忧退货</div>
+          <div class="item">
+            <i class="icon"></i>48小时快速退款</div>
+        </div>
+        <div class="tagList">
+          <p class="title" @click="goToBrand">品牌制造商直供
+            <i class="fa fa-angle-right"></i>
+          </p>
+          <div class="tabItem" v-for="(item, index) in tagListFour" :key="index">
+            <p class="name">{{item.name}}</p>
+            <p class="price">{{item.floorPrice}}元起</p>
+            <p class="new" v-if="item.newOnShelf"></p>
+            <img v-lazy="item.picUrl + '?imageView&amp;thumbnail=355x0&amp;quality=65'">
+          </div>
+        </div>
+        <div class="newGoods">
+          <div class="header">
+            <a href="#">
+              <p>周一周四 · 新品首发</p>
+              <button disabled="disabled">查看全部
+                <i class="fa fa-angle-right"></i>
+              </button>
+            </a>
+            <span class="angle"></span>
+          </div>
+          <horizontal-scroll :data="newGoods" class="localscrollWrapper">
+            <ul class="newgoodsList" ref="newgoodsList">
+              <li v-for="(item,index) in newGoods" :key="index" class="newgoodsItem">
+                <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
+                <div class="name">{{item.name}}</div>
+                <div class="desc">{{item.simpleDesc}}</div>
+                <div class="price">￥{{item.retailPrice}}</div>
+                <div class="choice" v-if="item.productPlace !== ''">
+                  <span v-for="(char, index) in _String2Array(item.productPlace)" :key="index">{{ char }}</span>
+                </div>
+                <div class="choice" v-if=" item.productPlace === '' && item.colorNum">
+                  <span>{{ item.colorNum }}</span>
+                  <span>色</span>
+                  <span>可</span>
+                  <span>选</span>
+                </div>
+              </li>
+              <li class="lookAll">
+                <p>查看全部</p>
+              </li>
+            </ul>
+          </horizontal-scroll>
+        </div>
+        <div class="rcmGoods newGoods">
+          <div class="header">
+            <a href="#">
+              <p>人气推荐 · 好物精选</p>
+              <button disabled="disabled">查看全部
+                <i class="fa fa-angle-right"></i>
+              </button>
+            </a>
+            <span class="angle"></span>
+          </div>
+          <horizontal-scroll :data="popularGoods" class="localscrollWrapper">
+            <ul class="newgoodsList" ref="populargoodsList">
+              <li v-for="(item,index) in popularGoods" :key="index" class="populargoodsItem">
+                <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
+                <div class="taglist" v-if="item.itemTagList.length > 0">
+                  <span v-for="(i, j) in item.itemTagList" :key="j" :class="i.name === '爆品' ? 'red' : 'orange' ">{{i.name}}</span>
+                </div>
+                <div class="name">{{item.name}}</div>
+                <div class="desc">{{item.simpleDesc}}</div>
+                <div class="price">￥{{item.retailPrice}}</div>
+                <div class="choice" v-if="item.productPlace !== ''">
+                  <span v-for="(char, index) in _String2Array(item.productPlace)" :key="index">{{ char }}</span>
+                </div>
+                <div class="choice" v-if=" item.productPlace === '' && item.colorNum">
+                  <span>{{ item.colorNum }}</span>
+                  <span>色</span>
+                  <span>可</span>
+                  <span>选</span>
+                </div>
+              </li>
+              <li class="lookAll">
+                <p>查看全部</p>
+              </li>
+            </ul>
+          </horizontal-scroll>
+        </div>
+        <limit-time-sale></limit-time-sale>
+        <fuli-she></fuli-she>
+        <div class="diffGoodSale">
+          <div v-for="(cate, index) in diffCateSale" :key="index" class="diffcate">
+            <div class="title">{{ cate.name }}好物</div>
+            <good-info v-for="(good, i) in cate.itemList" :key="i" :good="good" class="goodItem"></good-info>
+            <a class="more" href="#">
+              <span>更多{{ cate.name }}好物</span>
+              <i></i>
+            </a>
+          </div>
+        </div>
+        <footer>
+          <p>XX公司版权所有&nbsp;&copy;&nbsp;1999-2018</p>
+          <p>经营许可证： JY13301080111111</p>
+          <p>All Rights Reserved. 备案号：苏ICP备11111111号-1</p>
+        </footer>
       </div>
-    </div>
-    <div class="newGoods">
-      <div class="header">
-        <a href="#">
-          <p>周一周四 · 新品首发</p>
-          <button disabled="disabled">查看全部<i class="fa fa-angle-right"></i></button>
-        </a>
-        <span class="angle"></span>
-      </div>
-      <horizontal-scroll :data="newGoods" class="localscrollWrapper">
-        <ul class="newgoodsList" ref="newgoodsList">
-          <li v-for="(item,index) in newGoods" :key="index" class="newgoodsItem">
-            <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
-            <div class="name">{{item.name}}</div>
-            <div class="desc">{{item.simpleDesc}}</div>
-            <div class="price">￥{{item.retailPrice}}</div>
-            <div class="choice" v-if="item.productPlace !== ''">
-              <span v-for="(char, index) in _String2Array(item.productPlace)" :key="index">{{ char }}</span>
-            </div>
-            <div class="choice" v-if=" item.productPlace === '' && item.colorNum">
-              <span>{{ item.colorNum }}</span>
-              <span>色</span>
-              <span>可</span>
-              <span>选</span>
-            </div>
-          </li>
-          <li class="lookAll">
-            <p>查看全部</p>
-          </li>
-        </ul>
-      </horizontal-scroll>
-    </div>
-    <div class="rcmGoods newGoods">
-      <div class="header">
-        <a href="#">
-          <p>人气推荐 · 好物精选</p>
-          <button disabled="disabled">查看全部<i class="fa fa-angle-right"></i></button>
-        </a>
-        <span class="angle"></span>
-      </div>
-      <horizontal-scroll :data="popularGoods" class="localscrollWrapper">
-        <ul class="newgoodsList" ref="populargoodsList">
-          <li v-for="(item,index) in popularGoods" :key="index" class="populargoodsItem">
-            <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
-            <div class="taglist" v-if="item.itemTagList.length > 0">
-              <span v-for="(i, j) in item.itemTagList" :key="j" :class="i.name === '爆品' ? 'red' : 'orange' ">{{i.name}}</span>
-            </div>
-            <div class="name">{{item.name}}</div>
-            <div class="desc">{{item.simpleDesc}}</div>
-            <div class="price">￥{{item.retailPrice}}</div>
-            <div class="choice" v-if="item.productPlace !== ''">
-              <span v-for="(char, index) in _String2Array(item.productPlace)" :key="index">{{ char }}</span>
-            </div>
-            <div class="choice" v-if=" item.productPlace === '' && item.colorNum">
-              <span>{{ item.colorNum }}</span>
-              <span>色</span>
-              <span>可</span>
-              <span>选</span>
-            </div>
-          </li>
-          <li class="lookAll">
-            <p>查看全部</p>
-          </li>
-        </ul>
-      </horizontal-scroll>
-    </div>
-    <limit-time-sale></limit-time-sale>
-    <fuli-she></fuli-she>
-    <div class="diffGoodSale">
-      <div v-for="(cate, index) in diffCateSale" :key="index" class="diffcate">
-        <div class="title">{{ cate.name }}好物</div>
-        <good-info v-for="(good, i) in cate.itemList" :key="i" :good="good" class="goodItem"></good-info>
-        <a class="more" href="#">
-          <span>更多{{ cate.name }}好物</span><i></i>
-        </a>
-      </div>
-    </div>
-    <footer>
-      <p>XX公司版权所有&nbsp;&copy;&nbsp;1999-2018</p>
-      <p>经营许可证： JY13301080111111</p>
-      <p>All Rights Reserved. 备案号：苏ICP备11111111号-1</p>
-    </footer>
-    </div>
     </transition>
   </div>
 </template>
@@ -126,7 +136,7 @@ export default {
     GoodInfo,
     Loading
   },
-  data () {
+  data() {
     return {
       bannerData: [],
       tagListFour: [],
@@ -160,17 +170,17 @@ export default {
     }
   },
   watch: {
-    bannerData () {
+    bannerData() {
       this.adjustImage()
     },
-    newGoods () {
+    newGoods() {
       this._initnewgoodsList()
     },
-    popularGoods () {
+    popularGoods() {
       this._initpopulargoodsList()
     }
   },
-  mounted () {
+  mounted() {
     HomeAPI.getBannerData().then((res) => {
       if (res.errcode) {
         console.log(res.message)
@@ -217,7 +227,7 @@ export default {
         name: 'Brand'
       })
     },
-    adjustImage () {
+    adjustImage() {
       setTimeout(() => {
         let arr = document.querySelectorAll('.adaptHeightImg')
         let height = Math.floor(arr[0].clientWidth / 1.875)
@@ -226,7 +236,7 @@ export default {
         }
       }, 20)
     },
-    _initnewgoodsList () {
+    _initnewgoodsList() {
       if (this.newGoods.length > 0) {
         this.$nextTick(() => {
           const arr = document.querySelectorAll('.newgoodsItem')
@@ -239,7 +249,7 @@ export default {
         })
       }
     },
-    _initpopulargoodsList () {
+    _initpopulargoodsList() {
       if (this.popularGoods.length > 0) {
         this.$nextTick(() => {
           const arr = document.querySelectorAll('.populargoodsItem')
@@ -252,7 +262,7 @@ export default {
         })
       }
     },
-    _String2Array (string) {
+    _String2Array(string) {
       return [...string]
     }
   }
