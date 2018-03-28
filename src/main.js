@@ -12,7 +12,8 @@ import 'font-awesome/css/font-awesome.min.css'
 import {
   // eslint-disable-next-line
   Style,
-  Popup
+  Popup,
+  Rate
 } from 'cube-ui'
 Vue.use(
   VueLazyload,
@@ -23,6 +24,7 @@ Vue.use(
 )
 Vue.use(VueAwesomeSwiper)
 Vue.use(Popup)
+Vue.use(Rate)
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false

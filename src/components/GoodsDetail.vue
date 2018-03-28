@@ -1,6 +1,6 @@
 <template>
   <div class="goodsWrapper">
-    <loading title="aisudhjfia" v-if="!goodsItem"></loading>
+    <loading v-if="!goodsItem"></loading>
     <div v-if="goodsItem">
       <swiper :options="swiperOption" ref="mySwiper" class="swiper-box" v-if="bannerData.length">
         <swiper-slide v-for="(item, index) in bannerData" class="swiper-slide content" :key="index">
@@ -31,11 +31,14 @@
         <div class="comment">
           <p class="count">{{ goodsItem.commentCount | formatCommentNum }}</p>
           <p class="com">用户评价</p>
-          <p class="more">查看</p>
+          <router-link tag="p" class="more" :to="{name: 'GoodsComment' , params: {id: goodsId}}">查看</router-link>
         </div>
       </div>
       <div class="attribute" v-if="policyList.length">
-        <div class="choosed item">已选择:&nbsp;&nbsp;&nbsp;
+        <div class="choosed item">
+          <span>已选择:&nbsp;&nbsp;&nbsp;</span>
+          <span>选择规格和数量:&nbsp;&nbsp;&nbsp;</span>
+          <span>{{ choseType }}</span>
           <i class="greyLine"></i>
           <i class="rightArrow"></i>
         </div>
@@ -48,7 +51,7 @@
             <span v-for="item in policyList" :key="item.title">
               <i class="redDot"></i>{{ item.title }}</span>
           </div>
-          <i class="rightArrow"></i>
+          <!-- <i class="rightArrow"></i> -->
         </div>
       </div>
       <div class="comment" v-if="goodsItem && goodRates">
@@ -56,7 +59,7 @@
           <span class="">用户评价({{ goodsItem.commentCount | formatCommentNum }})</span>
           <span class="rate">{{ goodRates.goodCmtRate }}</span>
           <i class="greyLine"></i>
-          <i class="rightArrow"></i>
+          <router-link tag="i" class="rightArrow" :to="{name: 'GoodsComment' , params: {id: goodsId}}"></router-link>
         </div>
         <div class="firstCom">
           <div class="userinfo">
@@ -80,7 +83,7 @@
         <div class="attrListWrapper">
           <p v-for="item in goodsItem.attrList" :key="item.attrName" class="attrItemWrapper">
             <span class="name">{{ item.attrName }}</span>
-            <span class="value" v-html="item.attrValue.replace(/\n/, '<br/>')"></span>
+            <span class="value" v-html="item.attrValue.replace(/\n/g, '<br/>').replace(/,/g, '<br/>')"></span>
           </p>
         </div>
       </div>
@@ -110,6 +113,40 @@
         </div>
       </div>
     </div>
+    <div class="chooseGoodsType" v-if="goodsItem">
+      <div class="goodsinfo">
+        <img src="http://yanxuan.nosdn.127.net/728f70a3c5a795521052ce6f0507f608.png">
+        <div>
+          <span class="descTag">{{ goodsItem.promotionDesc }}</span>
+          <div class="price">
+            <span class="text">价格:</span>
+            <span class="newOne">&yen;{{ goodsItem.retailPrice }}</span>
+            <span class="oldOne">&yen;{{ goodsItem.counterPrice }}</span>
+          </div>
+          <p>已选择:
+            <span>请选择规格数量</span>
+          </p>
+        </div>
+      </div>
+      <div v-for="skutype in goodsItem.skuSpecList" :key="skutype.id" class="skutypeWrapper">
+        <p class="title">{{ skutype.name }}</p>
+        <ul>
+          <li v-for="tagSku in skutype.skuSpecValueList" :key="tagSku.id">{{ tagSku.value}}</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:16px;color:#333;margin-bottom: 15px;">数量</p>
+        <number-picker :number="goodsNumber" @minus="minusGoodsNum" @add="addGoodsNum"></number-picker>
+      </div>
+      <div class="buttons">
+        <p class="return">返回</p>
+        <p class="limitBy">立即购买</p>
+        <p class="addTotheCart">加入购物车</p>
+      </div>
+      <cube-popup type="my-popup" ref="myPopup" :mask="false">
+        不能再少啦！
+      </cube-popup>
+    </div>
   </div>
 </template>
 
@@ -117,10 +154,12 @@
 import GoodsAPI from '../service/goods'
 import GoodInfo from '../views/home/GoodInfo'
 import Loading from './Loading'
+import NumberPicker from './NumberPicker'
 export default {
   components: {
     GoodInfo,
-    Loading
+    Loading,
+    NumberPicker
   },
   data() {
     return {
@@ -132,6 +171,8 @@ export default {
       comment: null,
       detailImg: [],
       rcmList: [],
+      choseType: null,
+      goodsNumber: 1,
       swiperOption: {
         notNextTick: true,
         loop: true,
@@ -174,6 +215,7 @@ export default {
       this.comment = null
       this.detailImg = []
       this.rcmList = []
+      this.choseType = null
       this.goodsId = this.$route.params.id
       GoodsAPI.getGoodsDetailInfo(this.goodsId).then(res => {
         if (res.data.errcode) {
@@ -197,6 +239,7 @@ export default {
             tempDetailImg = tempDetailImg.concat(item.slice(6, item.length - 1))
           })
           this.detailImg = tempDetailImg
+          console.log(this.goodsItem.skuSpecList)
         }
       })
       GoodsAPI.goodrates(this.goodsId).then(res => {
@@ -213,6 +256,23 @@ export default {
           this.rcmList = res.data.data
         }
       })
+    },
+    minusGoodsNum() {
+      if (this.goodsNumber <= 1) {
+        this.showPopup('myPopup')
+      } else {
+        this.goodsNumber--
+      }
+    },
+    addGoodsNum() {
+      this.goodsNumber++
+    },
+    showPopup(refId) {
+      const component = this.$refs[refId]
+      component.show()
+      setTimeout(() => {
+        component.hide()
+      }, 1000)
     }
   },
   filters: {
@@ -487,18 +547,19 @@ export default {
   .attrListWrapper
     .attrItemWrapper
       display flex
-    p
       padding 10px 30px 10px 0
       border-top 1px dashed #cfcfcf
+      box-sizing border-box
     .name,.value
-      display inline-block
-      color #999
+      // display inline-block
       line-height 44px
       font-size 24px
-      width 148px
+    .name
+      color #999
+      min-width 168px
     .value
       color #333
-      width auto!important
+      box-sizing border-box
 .detailImgWrapper
   width 100%
   overflow hidden
@@ -547,7 +608,8 @@ export default {
         background-color rgb(180, 40, 45)
         margin-right 6px
         position relative
-        top -12px
+        vertical-align top
+        top 15px
     .answer
       padding-left 16px
       color #787878
@@ -586,4 +648,100 @@ export default {
         padding 0 10px 33px 20px
       &:nth-child(odd)
         padding 0 20px 33px 10px
+.chooseGoodsType
+  position fixed
+  width 100vw
+  height 100vh
+  overflow hidden
+  background white
+  top 0
+  left 0
+  z-index 1
+  padding 30px 30px 130px 30px
+  box-sizing border-box
+  .goodsinfo
+    padding-bottom 40px
+    display flex
+    align-items center
+    img
+      width 170px
+      height 170px
+      background-color rgb(244,244, 244)
+      margin-right 20px
+    .descTag
+      display inline-block
+      padding 0 9px 1px 9px
+      margin-bottom 12px
+      box-sizing border-box
+      border 1px solid rgb(244, 143, 24)
+      border-radius 8
+      font-size 24px
+      line-height 33px
+      background-color rgb(244, 143, 24)
+      text-align center
+      color white
+    .price
+      padding-bottom 10px
+      box-sizing border-box
+      .text, .newOne
+        font-size 32px
+        line-height 32px
+        color #333
+      .oldOne
+        color #999
+        font-size 32px
+        lineheight 32px
+        text-decoration line-through
+  .skutypeWrapper
+    margin-bottom 30px
+    .title
+      margin-bottom 24px
+      font-size 27px
+      line-height 27px
+      color #333
+    li
+      display inline-block
+      padding 0 34px
+      margin-bottom 16px
+      margin-right 24px
+      color #333
+      border 1px solid #333
+      text-align center
+      line-height 64px
+      font-size 24px
+  .buttons
+    position absolute
+    bottom 0
+    left 0
+    right 0
+    height 96px
+    display flex
+    line-height 96px
+    justify-content space-between
+    p
+      flex-grow 1
+      box-sizing border-box
+      border-top 1px solid rgb(199, 199, 199)
+      border-bottom 1px solid rgb(199, 199, 199)
+      text-align center
+      font-size 28px
+      color #333
+    .return
+      border-right 1px solid rgb(199, 199, 199)
+    .addTotheCart
+      border 1px solid rgb(180, 40, 45)
+      background-color rgb(180, 40, 45)
+      color white
+.cube-my-popup
+  top 50%
+  left 50%
+  padding-left 20px
+  background rgba(0, 0, 0, 0.5)
+  color #eee
+  width 280px
+  height 100px
+  border-radius 8px
+  transform translate3d(-140px,-50px,0)
+  text-align center
+  box-sizing border-box
 </style>

@@ -23,12 +23,23 @@
           <p class="title" @click="goToBrand">品牌制造商直供
             <i class="fa fa-angle-right"></i>
           </p>
-          <div class="tabItem" v-for="(item, index) in tagListFour" :key="index">
+          <router-link tag="div" class="tabItem" v-for="(item, index) in tagListFour" :key="index"
+            :to="{
+              name: 'BrandDetail',
+              params: {
+                id: item.id
+              },
+              query: {
+                appListPicUrl:item.appListPicUrl,
+                name: item.name,
+                simpleDesc: item.simpleDesc
+              }
+            }">
             <p class="name">{{item.name}}</p>
             <p class="price">{{item.floorPrice}}元起</p>
             <p class="new" v-if="item.newOnShelf"></p>
             <img v-lazy="item.picUrl + '?imageView&amp;thumbnail=355x0&amp;quality=65'">
-          </div>
+          </router-link>
         </div>
         <div class="newGoods">
           <div class="header">

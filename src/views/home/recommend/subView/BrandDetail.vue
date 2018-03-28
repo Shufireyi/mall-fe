@@ -11,12 +11,12 @@
         </div>
       </header>
       <div class="contition">
-        <span class="item">综合</span>
-        <span class="item">上新
-          <i></i>
+        <span class="item active changeParamButton" @click.stop="changeParams(0)">综合</span>
+        <span class="item changeParamButton" @click.stop="changeParams(1)">上新
+          <i class="sortArrow"></i>
         </span>
-        <span class="item">价格
-          <i></i>
+        <span class="item changeParamButton" @click.stop="changeParams(2)">价格
+          <i class="sortArrow"></i>
         </span>
       </div>
       <div class="goodsWrapper" v-if="goodsList.length">
@@ -52,7 +52,9 @@ export default {
     }
   },
   watch: {
-    '$route': 'reFresh'
+    '$route': 'reFresh',
+    'params.sortType': 'reFresh',
+    'params.descSorted': 'reFresh'
   },
   mounted() {
     this.reFresh()
@@ -67,9 +69,52 @@ export default {
       this.name = this.$route.query.name
       this.simpleDesc = this.$route.query.simpleDesc
       BrandAPI.getBrandDetail(this.params).then(res => {
-        console.log(res.data)
-        this.goodsList = res.data.data.result.result
+        if (res.data.errcode) {
+          console.log(res.data)
+        } else {
+          this.goodsList = res.data.data.result.result
+        }
       })
+    },
+    changeParams(type) {
+      const buttonList = document.querySelectorAll('.changeParamButton')
+      buttonList.forEach(element => {
+        element.classList.remove('active')
+      })
+      buttonList[type].classList.add('active')
+      switch (type) {
+        case 0:
+          this.params.sortType = 0
+          break
+        case 1:
+          if (this.params.sortType === 1) {
+            this.params.descSorted = false
+            const temp1 = document.querySelectorAll('.sortArrow')[0]
+            temp1.classList.remove('down')
+            temp1.classList.add('up')
+          } else {
+            this.params.sortType = 1
+            this.params.descSorted = true
+            const temp2 = document.querySelectorAll('.sortArrow')[0]
+            temp2.classList.add('down')
+          }
+          break
+        case 2:
+          if (this.params.sortType === 2) {
+            this.params.descSorted = false
+            const temp1 = document.querySelectorAll('.sortArrow')[1]
+            temp1.classList.remove('down')
+            temp1.classList.add('up')
+          } else {
+            this.params.sortType = 2
+            this.params.descSorted = true
+            const temp2 = document.querySelectorAll('.sortArrow')[1]
+            temp2.classList.add('down')
+          }
+          break
+        default:
+          break
+      }
     }
   },
   beforeRouteEnter(to, form, next) {
@@ -131,9 +176,9 @@ header
       left 160px
       top 2px
       background-image url('http://yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-648460126c.png')
-    i.up
+    &.active i.up
       background-image url('http://yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-f22085ade1.png')
-    i.down
+    &.active i.down
       background-image url('http://yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-a40f8bd193.png')
 .goodsWrapper
   background #fff
