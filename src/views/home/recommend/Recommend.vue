@@ -23,18 +23,17 @@
           <p class="title" @click="goToBrand">品牌制造商直供
             <i class="fa fa-angle-right"></i>
           </p>
-          <router-link tag="div" class="tabItem" v-for="(item, index) in tagListFour" :key="index"
-            :to="{
-              name: 'BrandDetail',
-              params: {
-                id: item.id
-              },
-              query: {
-                appListPicUrl:item.appListPicUrl,
-                name: item.name,
-                simpleDesc: item.simpleDesc
-              }
-            }">
+          <router-link tag="div" class="tabItem" v-for="(item, index) in tagListFour" :key="index" :to="{
+                  name: 'BrandDetail',
+                  params: {
+                    id: item.id
+                  },
+                  query: {
+                    appListPicUrl:item.appListPicUrl,
+                    name: item.name,
+                    simpleDesc: item.simpleDesc
+                  }
+                }">
             <p class="name">{{item.name}}</p>
             <p class="price">{{item.floorPrice}}元起</p>
             <p class="new" v-if="item.newOnShelf"></p>
@@ -42,18 +41,18 @@
           </router-link>
         </div>
         <div class="newGoods">
-          <div class="header">
-            <a href="#">
+          <router-link tag="div" :to="{name: 'NewGoodsSale'}" class="header">
+            <div>
               <p>周一周四 · 新品首发</p>
-              <button disabled="disabled">查看全部
+              <button disabled="disabled" >查看全部
                 <i class="fa fa-angle-right"></i>
               </button>
-            </a>
+            </div>
             <span class="angle"></span>
-          </div>
+          </router-link>
           <horizontal-scroll :data="newGoods" class="localscrollWrapper">
             <ul class="newgoodsList" ref="newgoodsList">
-              <li v-for="(item,index) in newGoods" :key="index" class="newgoodsItem">
+              <router-link tag="li" v-for="(item,index) in newGoods" :key="index" class="newgoodsItem" :to="{ name: 'GoodsDetail', params: { id: item.id }}">
                 <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
                 <div class="name">{{item.name}}</div>
                 <div class="desc">{{item.simpleDesc}}</div>
@@ -67,9 +66,9 @@
                   <span>可</span>
                   <span>选</span>
                 </div>
-              </li>
+              </router-link>
               <li class="lookAll">
-                <p>查看全部</p>
+                <router-link tag="p" :to="{name: 'NewGoodsSale'}">查看全部</router-link>
               </li>
             </ul>
           </horizontal-scroll>

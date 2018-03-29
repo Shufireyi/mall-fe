@@ -7,8 +7,7 @@
         <span>{{ rates.goodCmtRate }}</span>
       </div>
       <div class="tagWrapper" v-if="tagList.length">
-        <span class="commenttagItem active">{{tagList[0].name}}({{tagList[0].strCount}})</span>
-        <span v-for="tag in tagList.slice(1)" :key="tag.name" class="commenttagItem">{{tag.name}}({{tag.strCount}})</span>
+        <span v-for="tagItem in tagList" :key="tagItem.name" class="commenttagItem" @click="tag = tagItem.name" :class="tag === tagItem.name ? 'active' : ''">{{tagItem.name}}({{tagItem.strCount}})</span>
       </div>
       <div class="commentItemWrapper">
         <ul>
@@ -29,6 +28,18 @@
             <p class="imgsWrapper">
               <img v-for="pic in comment.picList" v-lazy="pic + '?imageView&quality=65&thumbnail=330x330'" :key="pic">
             </p>
+            <div class="appendComment" v-if="comment.appendCommentVO">
+              <p class="title" style="line-height:17px;font-size:14px;color:rgb(180, 40, 45);">追评</p>
+              <p class="goodsku">
+                <span>{{ comment.appendCommentVO.createTime | formatTime }}</span>
+              </p>
+              <p class="maincomment">
+                {{ comment.appendCommentVO.content }}
+              </p>
+              <p class="imgsWrapper">
+                <img v-for="pic in comment.appendCommentVO.picList" v-lazy="pic + '?imageView&quality=65&thumbnail=330x330'" :key="pic">
+              </p>
+            </div>
           </li>
         </ul>
       </div>
@@ -57,6 +68,11 @@ export default {
       noData: false,
       show: false,
       canLoading: true
+    }
+  },
+  watch: {
+    tag() {
+      this.refresh()
     }
   },
   mounted() {

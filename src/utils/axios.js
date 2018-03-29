@@ -9,9 +9,9 @@ instance.interceptors.request.use((config) => {
   const conf = {
     ...config,
     headers: {
-      ...config.headers,
+      ...config.headers
       // 'X-Appgo-Token': Cookies.get('_token')
-      'x-access-token': 'AAAAAAAAAAAAAAA'
+      // 'x-access-token': 'AAAAAAAAAAAAAAA'
     }
   }
   return conf

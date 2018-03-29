@@ -23,12 +23,13 @@
           <p class="subname">{{ goodsItem.simpleDesc }}</p>
           <p class="price">&yen;{{ goodsItem.retailPrice }}</p>
           <p class="labels">
+            <span class="tag" v-if="goodsItem.promotionDesc">{{goodsItem.promotionDesc}}<i></i></span>
             <span class="tag" v-for="tag in goodsItem.tagList" :key="tag.id">{{tag.tagName}}
               <i></i>
             </span>
           </p>
         </div>
-        <div class="comment">
+        <div class="comment" v-if="goodsItem.commentCount">
           <p class="count">{{ goodsItem.commentCount | formatCommentNum }}</p>
           <p class="com">用户评价</p>
           <router-link tag="p" class="more" :to="{name: 'GoodsComment' , params: {id: goodsId}}">查看</router-link>
@@ -37,10 +38,10 @@
       <div class="attribute" v-if="policyList.length">
         <div class="choosed item">
           <span>已选择:&nbsp;&nbsp;&nbsp;</span>
-          <span>选择规格和数量:&nbsp;&nbsp;&nbsp;</span>
-          <span>{{ choseType }}</span>
+          <span v-if="choosenResult.length <= 0">选择规格和数量&nbsp;&nbsp;&nbsp;</span>
+          <span v-if="choosenResult.length">{{ choosenResult }}</span>
           <i class="greyLine"></i>
-          <i class="rightArrow"></i>
+          <i class="rightArrow" @click="showSkuChoose = true"></i>
         </div>
         <div class="points item">积分:&nbsp;&nbsp;&nbsp;购买最高可得{{ Math.floor(goodsItem.retailPrice / 10) }}积分
           <i class="greyLine"></i>
@@ -113,7 +114,7 @@
         </div>
       </div>
     </div>
-    <div class="chooseGoodsType" v-if="goodsItem">
+    <div class="chooseGoodsType" v-if="goodsItem && showSkuChoose">
       <div class="goodsinfo">
         <img src="http://yanxuan.nosdn.127.net/728f70a3c5a795521052ce6f0507f608.png">
         <div>
@@ -124,14 +125,15 @@
             <span class="oldOne">&yen;{{ goodsItem.counterPrice }}</span>
           </div>
           <p>已选择:
-            <span>请选择规格数量</span>
+            <span v-if="choosenResult.length <= 0">请选择规格数量</span>
+            <span v-else>{{ choosenResult }}</span>
           </p>
         </div>
       </div>
       <div v-for="skutype in goodsItem.skuSpecList" :key="skutype.id" class="skutypeWrapper">
         <p class="title">{{ skutype.name }}</p>
         <ul>
-          <li v-for="tagSku in skutype.skuSpecValueList" :key="tagSku.id">{{ tagSku.value}}</li>
+          <li v-for="(tagSku, index) in skutype.skuSpecValueList" :key="tagSku.id" @click="choicesku(skutype.name, tagSku.value, index)" :class="skutype.name">{{ tagSku.value}}</li>
         </ul>
       </div>
       <div>
@@ -139,7 +141,7 @@
         <number-picker :number="goodsNumber" @minus="minusGoodsNum" @add="addGoodsNum"></number-picker>
       </div>
       <div class="buttons">
-        <p class="return">返回</p>
+        <p class="return" @click="showSkuChoose = false">返回</p>
         <p class="limitBy">立即购买</p>
         <p class="addTotheCart">加入购物车</p>
       </div>
@@ -173,6 +175,9 @@ export default {
       rcmList: [],
       choseType: null,
       goodsNumber: 1,
+      addToCartParams: {},
+      choosenResult: '',
+      showSkuChoose: false,
       swiperOption: {
         notNextTick: true,
         loop: true,
@@ -207,6 +212,9 @@ export default {
   },
   methods: {
     refresh() {
+      if (!this.$route.params.id) {
+        return
+      }
       this.goodsId = null
       this.goodsItem = null
       this.bannerData = []
@@ -239,7 +247,12 @@ export default {
             tempDetailImg = tempDetailImg.concat(item.slice(6, item.length - 1))
           })
           this.detailImg = tempDetailImg
-          console.log(this.goodsItem.skuSpecList)
+          this.goodsItem.skuSpecList.forEach(ele => {
+            let name = ele.name
+            this.addToCartParams = Object.assign(this.addToCartParams, {
+              [name]: ''
+            })
+          })
         }
       })
       GoodsAPI.goodrates(this.goodsId).then(res => {
@@ -256,6 +269,26 @@ export default {
           this.rcmList = res.data.data
         }
       })
+    },
+    choicesku(type, value, index) {
+      const doms = document.querySelectorAll(`.${type}`)
+      let result = ''
+      doms.forEach(ele => {
+        ele.classList.remove('activeTag')
+      })
+      if (this.addToCartParams[type].length > 0) {
+        this.addToCartParams[type] = ''
+      } else {
+        this.addToCartParams[type] = value
+        doms[index].classList.add('activeTag')
+      }
+      for (var key in this.addToCartParams) {
+        if (this.addToCartParams.hasOwnProperty(key)) {
+          var element = this.addToCartParams[key]
+          result += `${element}  `
+        }
+      }
+      this.choosenResult = result
     },
     minusGoodsNum() {
       if (this.goodsNumber <= 1) {
@@ -709,6 +742,9 @@ export default {
       text-align center
       line-height 64px
       font-size 24px
+      &.activeTag
+        border 1px solid rgb(180, 40, 45)
+        color rgb(180, 40, 45)
   .buttons
     position absolute
     bottom 0
