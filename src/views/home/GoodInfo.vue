@@ -1,27 +1,28 @@
 <template>
-  <router-link v-if="good" class="wrapper" tag="div"
-    :to="{ name: 'GoodsDetail', params: { id: good.id }}">
-    <div class="img">
-      <img v-lazy="good.listPicUrl + '?imageView&amp;quality=65&amp;thumbnail=330x330'" alt="">
-      <div class="desc">{{ good.simpleDesc }}</div>
-      <div class="choice" v-if="good.productPlace !== ''">
-        <span v-for="(char, index) in _String2Array(good.productPlace)" :key="index">{{ char }}</span>
+  <transition name="goodInfofadeIn" mode="out-in">
+    <router-link v-if="good" class="wrapper" tag="div" :to="{ name: 'GoodsDetail', params: { id: good.id }}">
+      <div class="img">
+        <img v-lazy="good.listPicUrl + '?imageView&amp;quality=65&amp;thumbnail=330x330'" alt="">
+        <div class="desc">{{ good.simpleDesc }}</div>
+        <div class="choice" v-if="good.productPlace !== ''">
+          <span v-for="(char, index) in _String2Array(good.productPlace)" :key="index">{{ char }}</span>
+        </div>
+        <div class="choice" v-if=" good.productPlace === '' && good.colorNum">
+          <span>{{ good.colorNum }}</span>
+          <span>色</span>
+          <span>可</span>
+          <span>选</span>
+        </div>
       </div>
-      <div class="choice" v-if=" good.productPlace === '' && good.colorNum">
-        <span>{{ good.colorNum }}</span>
-        <span>色</span>
-        <span>可</span>
-        <span>选</span>
+      <div class="info">
+        <div class="tag" v-if="good.itemTagList.length > 0">
+          <span v-for="(tag,index) in good.itemTagList" :key="index" :class="tag.name === '爆品' ? 'red' : 'orange'">{{ tag.name }}</span>
+        </div>
+        <div class="name">{{ good.name }}</div>
+        <div class="price">&yen;{{ good.retailPrice }}</div>
       </div>
-    </div>
-    <div class="info">
-      <div class="tag" v-if="good.itemTagList.length > 0">
-        <span v-for="(tag,index) in good.itemTagList" :key="index" :class="tag.name === '爆品' ? 'red' : 'orange'">{{ tag.name }}</span>
-      </div>
-      <div class="name">{{ good.name }}</div>
-      <div class="price">&yen;{{ good.retailPrice }}</div>
-    </div>
-  </router-link>
+    </router-link>
+  </transition>
 </template>
 
 <script>
@@ -33,7 +34,7 @@ export default {
     }
   },
   methods: {
-    _String2Array (string) {
+    _String2Array(string) {
       return [...string]
     }
   }
@@ -118,4 +119,11 @@ export default {
       line-height 32px
       font-size 32px
       color #b4282d
+.goodInfofadeIn-enter-active,
+.goodInfofadeIn-leave-active
+  transition  opacity  .5s
+
+.goodInfofadeIn-enter,
+.goodInfofadeIn-leave-to
+  opacity 0
 </style>

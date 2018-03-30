@@ -8,7 +8,7 @@
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
-    <div class="allnewGoods">
+    <div class="allnewGoods" v-if="newItems.length">
       <p class="title">全部新品</p>
       <div class="contition">
         <span class="item active changeParamButton" @click.stop="changeParams(0)">综合</span>
@@ -16,7 +16,7 @@
           <i class="sortArrow"></i>
         </span>
       </div>
-      <div class="goodsWrapper" v-if="newItems.length">
+      <div class="goodsWrapper">
         <good-info v-for="(good, i) in newItems" :key="i" :good="good" class="goodItem"></good-info>
       </div>
     </div>
@@ -64,17 +64,20 @@ export default {
   },
   mounted() {
     HomeOtherAPI.newGoodsDetail().then(res => {
-      console.log(res.data)
-      this.newItemAds = res.data.data.newItemAds
-      this.newItems = res.data.data.newItems.itemList
+      if (res.data.errcode) {
+        console.log(res.data)
+      } else {
+        this.newItemAds = res.data.data.newItemAds
+        this.newItems = res.data.data.newItems.itemList
+      }
     })
   },
   watch: {
     sortType() {
-      console.log(this.sortType, this.descSorted)
+      this.getNewGoodsList()
     },
     descSorted() {
-      console.log(this.sortType, this.descSorted)
+      this.getNewGoodsList()
     }
   },
   methods: {
@@ -85,7 +88,11 @@ export default {
         descSorted: this.descSorted,
         categoryL1Id: 0
       }).then(res => {
-        console.log(res.data)
+        if (res.data.errcode) {
+          console.log(res.data)
+        } else {
+          this.newItems = res.data.data.data.itemList
+        }
       })
     },
     changeParams(type) {
@@ -101,10 +108,15 @@ export default {
           break
         case 1:
           if (this.sortType === 1) {
-            this.descSorted = false
+            this.descSorted = !this.descSorted
             const temp1 = document.querySelectorAll('.sortArrow')[0]
             temp1.classList.remove('down')
-            temp1.classList.add('up')
+            temp1.classList.remove('up')
+            if (this.descSorted) {
+              temp1.classList.add('down')
+            } else {
+              temp1.classList.add('up')
+            }
           } else {
             this.sortType = 1
             this.descSorted = true

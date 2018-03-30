@@ -18,5 +18,11 @@ export default {
   /**
    * 新品列表
    */
-  getNewGoodsList: params => axios.get(`/indexOther/newGoodsList`, { params })
+  getNewGoodsList: params => axios.get(`/indexOther/newGoodsList`, { params }),
+
+  /**
+   * 人气好物推荐
+   */
+  getPopularRecommendGoods: () =>
+    axios.get('/indexOther/getPopularRecommendGoods')
 }

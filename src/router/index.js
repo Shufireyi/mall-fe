@@ -118,6 +118,12 @@ export default new Router({
       name: 'NewGoodsSale',
       component: () =>
         import('../views/home/recommend/subView/NewGoodsSale.vue')
+    },
+    {
+      path: '/populargoods',
+      name: 'PopularGoods',
+      component: () =>
+        import('../views/home/recommend/subView/PopularGoods.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {

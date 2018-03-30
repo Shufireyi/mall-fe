@@ -6,14 +6,14 @@
         <swiper :options="swiperOption" ref="mySwiper" class="swiper-box">
           <swiper-slide v-for="(item, index) in bannerData" class="swiper-slide content" :key="index">
             <router-link :to="{name: 'Home'}" tag="p">
-              <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'" alt="">
+              <img class="adaptHeightImg" :src="item.picUrl + '?imageView&thumbnail=750x0&quality=75'">
             </router-link>
           </swiper-slide>
           <div class="swiper-pagination" slot="pagination"></div>
         </swiper>
         <div class="adv">
           <div class="item">
-            <i class="icon"></i>网易自营品牌</div>
+            <i class="icon"></i>XX自营品牌</div>
           <div class="item">
             <i class="icon"></i>30天无忧退货</div>
           <div class="item">
@@ -24,16 +24,16 @@
             <i class="fa fa-angle-right"></i>
           </p>
           <router-link tag="div" class="tabItem" v-for="(item, index) in tagListFour" :key="index" :to="{
-                  name: 'BrandDetail',
-                  params: {
-                    id: item.id
-                  },
-                  query: {
-                    appListPicUrl:item.appListPicUrl,
-                    name: item.name,
-                    simpleDesc: item.simpleDesc
-                  }
-                }">
+                                          name: 'BrandDetail',
+                                          params: {
+                                            id: item.id
+                                          },
+                                          query: {
+                                            appListPicUrl:item.appListPicUrl,
+                                            name: item.name,
+                                            simpleDesc: item.simpleDesc
+                                          }
+                                        }">
             <p class="name">{{item.name}}</p>
             <p class="price">{{item.floorPrice}}元起</p>
             <p class="new" v-if="item.newOnShelf"></p>
@@ -44,7 +44,7 @@
           <router-link tag="div" :to="{name: 'NewGoodsSale'}" class="header">
             <div>
               <p>周一周四 · 新品首发</p>
-              <button disabled="disabled" >查看全部
+              <button>查看全部
                 <i class="fa fa-angle-right"></i>
               </button>
             </div>
@@ -67,32 +67,32 @@
                   <span>选</span>
                 </div>
               </router-link>
-              <li class="lookAll">
-                <router-link tag="p" :to="{name: 'NewGoodsSale'}">查看全部</router-link>
-              </li>
+              <router-link tag="li" class="lookAll" :to="{name: 'NewGoodsSale'}">
+                <p>查看全部</p>
+              </router-link>
             </ul>
           </horizontal-scroll>
         </div>
         <div class="rcmGoods newGoods">
-          <div class="header">
-            <a href="#">
+          <router-link tag="div" :to="{name: 'PopularGoods'}" class="header">
+            <div>
               <p>人气推荐 · 好物精选</p>
-              <button disabled="disabled">查看全部
+              <button>查看全部
                 <i class="fa fa-angle-right"></i>
               </button>
-            </a>
+            </div>
             <span class="angle"></span>
-          </div>
+          </router-link>
           <horizontal-scroll :data="popularGoods" class="localscrollWrapper">
             <ul class="newgoodsList" ref="populargoodsList">
-              <li v-for="(item,index) in popularGoods" :key="index" class="populargoodsItem">
+              <router-link tag="li" v-for="(item,index) in popularGoods" :key="index" class="populargoodsItem" :to="{ name: 'GoodsDetail', params: { id: item.id }}">
                 <img v-lazy="item.listPicUrl + '?imageView&quality=65&thumbnail=330x330'">
                 <div class="taglist" v-if="item.itemTagList.length > 0">
                   <span v-for="(i, j) in item.itemTagList" :key="j" :class="i.name === '爆品' ? 'red' : 'orange' ">{{i.name}}</span>
                 </div>
                 <div class="name">{{item.name}}</div>
                 <div class="desc">{{item.simpleDesc}}</div>
-                <div class="price">￥{{item.retailPrice}}</div>
+                <div class="price">&yen;{{item.retailPrice}}</div>
                 <div class="choice" v-if="item.productPlace !== ''">
                   <span v-for="(char, index) in _String2Array(item.productPlace)" :key="index">{{ char }}</span>
                 </div>
@@ -102,10 +102,10 @@
                   <span>可</span>
                   <span>选</span>
                 </div>
-              </li>
-              <li class="lookAll">
+              </router-link>
+              <router-link tag="li" class="lookAll" :to="{name: 'PopularGoods'}">
                 <p>查看全部</p>
-              </li>
+              </router-link>
             </ul>
           </horizontal-scroll>
         </div>
@@ -115,10 +115,10 @@
           <div v-for="(cate, index) in diffCateSale" :key="index" class="diffcate">
             <div class="title">{{ cate.name }}好物</div>
             <good-info v-for="(good, i) in cate.itemList" :key="i" :good="good" class="goodItem"></good-info>
-            <a class="more" href="#">
+            <router-link class="more" :to="{name:routerName(cate.name)}">
               <span>更多{{ cate.name }}好物</span>
               <i></i>
-            </a>
+            </router-link>
           </div>
         </div>
         <footer>
@@ -236,6 +236,32 @@ export default {
       this.$router.push({
         name: 'Brand'
       })
+    },
+    routerName(item) {
+      switch (item) {
+        case '居家':
+          return 'Jujia'
+        case '配件':
+          return 'Peijian'
+        case '服装':
+          return 'Fuzhuang'
+        case '电器':
+          return 'Dianqi'
+        case '洗护':
+          return 'Xihu'
+        case '饮食':
+          return 'Yinshi'
+        case '餐厨':
+          return 'Canchu'
+        case '婴童':
+          return 'Yingtong'
+        case '文体':
+          return 'Wenti'
+        case '特色区':
+          return 'Tese'
+        default:
+          return 'Recommend'
+      }
     },
     adjustImage() {
       setTimeout(() => {
@@ -483,6 +509,7 @@ export default {
       background-color #F4E9CB
       color #B4A078
 .diffGoodSale
+  background white
   .diffcate
     background white
     margin 0 0 20px 0
