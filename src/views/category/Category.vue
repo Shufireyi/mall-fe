@@ -62,6 +62,7 @@ export default {
         console.log(res.message)
       } else {
         this.mainCate = res.data.data
+        this.activeFirst()
       }
     })
     GoodsAPI.getAllGoodsNum().then(res => {

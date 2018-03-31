@@ -23,7 +23,9 @@
           <p class="subname">{{ goodsItem.simpleDesc }}</p>
           <p class="price">&yen;{{ goodsItem.retailPrice }}</p>
           <p class="labels">
-            <span class="tag" v-if="goodsItem.promotionDesc">{{goodsItem.promotionDesc}}<i></i></span>
+            <span class="tag" v-if="goodsItem.promotionDesc">{{goodsItem.promotionDesc}}
+              <i></i>
+            </span>
             <span class="tag" v-for="tag in goodsItem.tagList" :key="tag.id">{{tag.tagName}}
               <i></i>
             </span>
@@ -114,6 +116,7 @@
         </div>
       </div>
     </div>
+    <div class="blackboard" v-if="goodsItem && showSkuChoose" @click.stop="showSkuChoose = false"></div>
     <div class="chooseGoodsType" v-if="goodsItem && showSkuChoose">
       <div class="goodsinfo">
         <img src="http://yanxuan.nosdn.127.net/728f70a3c5a795521052ce6f0507f608.png">
@@ -141,7 +144,7 @@
         <number-picker :number="goodsNumber" @minus="minusGoodsNum" @add="addGoodsNum"></number-picker>
       </div>
       <div class="buttons">
-        <p class="return" @click="showSkuChoose = false">返回</p>
+        <!-- <p class="return" @click="showSkuChoose = false">返回</p> -->
         <p class="limitBy">立即购买</p>
         <p class="addTotheCart">加入购物车</p>
       </div>
@@ -681,16 +684,25 @@ export default {
         padding 0 10px 33px 20px
       &:nth-child(odd)
         padding 0 20px 33px 10px
+.blackboard
+  position fixed
+  top 0
+  left 0
+  bottom 0
+  right 0
+  background-color rgba(0, 0, 0, .4)
+  z-index 1
+  -webkit-backdrop-filter blur(5px)
+  backdrop-filter blur(5px)
 .chooseGoodsType
   position fixed
   width 100vw
-  height 100vh
   overflow hidden
   background white
-  top 0
+  bottom 0
   left 0
   z-index 1
-  padding 30px 30px 130px 30px
+  padding 30px 30px 30px 30px
   box-sizing border-box
   .goodsinfo
     padding-bottom 40px
@@ -746,10 +758,7 @@ export default {
         border 1px solid rgb(180, 40, 45)
         color rgb(180, 40, 45)
   .buttons
-    position absolute
-    bottom 0
-    left 0
-    right 0
+    margin-top 40px
     height 96px
     display flex
     line-height 96px
@@ -764,6 +773,8 @@ export default {
       color #333
     .return
       border-right 1px solid rgb(199, 199, 199)
+    .limitBy
+      border-left 1px solid rgb(199, 199, 199)
     .addTotheCart
       border 1px solid rgb(180, 40, 45)
       background-color rgb(180, 40, 45)

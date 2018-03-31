@@ -118,6 +118,16 @@ export default new Router({
       name: 'NewGoodsSale',
       component: () =>
         import('../views/home/recommend/subView/NewGoodsSale.vue')
+    },
+    {
+      path: '/search',
+      name: 'SearchPage',
+      component: () => import('../components/SerchPage.vue')
+    },
+    {
+      path: '/searchresult/:keyword',
+      name: 'SearchResultList',
+      component: () => import('../components/SearchGoodsList.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {

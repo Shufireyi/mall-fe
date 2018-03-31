@@ -18,5 +18,19 @@ export default {
   /**
    * 新品列表
    */
-  getNewGoodsList: params => axios.get(`/indexOther/newGoodsList`, { params })
+  getNewGoodsList: params => axios.get(`/indexOther/newGoodsList`, { params }),
+  /**
+   * 搜索页初始化信息
+   */
+  getSearchInit: () => axios.get('/indexOther/getSearchInit'),
+  /**
+   * 搜索提示
+   */
+  searchAutoComplete: param =>
+    axios.get(`/indexOther/searchAutoComplete?keywordPrefix=${param}`),
+  /**
+   * 搜索商品列表
+   */
+  searchGoodsByStr: params =>
+    axios.get('/indexOther/searchGoodsByStr', { params })
 }
