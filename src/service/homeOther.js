@@ -32,5 +32,11 @@ export default {
    * 搜索商品列表
    */
   searchGoodsByStr: params =>
-    axios.get('/indexOther/searchGoodsByStr', { params })
+    axios.get('/indexOther/searchGoodsByStr', { params }),
+
+  /**
+   * 人气好物推荐
+   */
+  getPopularRecommendGoods: () =>
+    axios.get('/indexOther/getPopularRecommendGoods')
 }

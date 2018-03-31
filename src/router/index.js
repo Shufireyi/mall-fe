@@ -128,6 +128,12 @@ export default new Router({
       path: '/searchresult/:keyword',
       name: 'SearchResultList',
       component: () => import('../components/SearchGoodsList.vue')
+    },
+    {
+      path: '/populargoods',
+      name: 'PopularGoods',
+      component: () =>
+        import('../views/home/recommend/subView/PopularGoods.vue')
     }
   ],
   scrollBehavior(to, from, savedPosition) {

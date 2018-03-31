@@ -88,10 +88,15 @@ export default {
           break
         case 1:
           if (this.params.sortType === 1) {
-            this.params.descSorted = false
+            this.params.descSorted = !this.params.descSorted
             const temp1 = document.querySelectorAll('.sortArrow')[0]
             temp1.classList.remove('down')
-            temp1.classList.add('up')
+            temp1.classList.remove('up')
+            if (this.params.descSorted) {
+              temp1.classList.add('down')
+            } else {
+              temp1.classList.add('up')
+            }
           } else {
             this.params.sortType = 1
             this.params.descSorted = true
@@ -101,10 +106,15 @@ export default {
           break
         case 2:
           if (this.params.sortType === 2) {
-            this.params.descSorted = false
+            this.params.descSorted = !this.params.descSorted
             const temp1 = document.querySelectorAll('.sortArrow')[1]
             temp1.classList.remove('down')
-            temp1.classList.add('up')
+            temp1.classList.remove('up')
+            if (this.params.descSorted) {
+              temp1.classList.add('down')
+            } else {
+              temp1.classList.add('up')
+            }
           } else {
             this.params.sortType = 2
             this.params.descSorted = true

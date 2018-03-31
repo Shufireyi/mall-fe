@@ -119,7 +119,7 @@
     <div class="blackboard" v-if="goodsItem && showSkuChoose" @click.stop="showSkuChoose = false"></div>
     <div class="chooseGoodsType" v-if="goodsItem && showSkuChoose">
       <div class="goodsinfo">
-        <img src="http://yanxuan.nosdn.127.net/728f70a3c5a795521052ce6f0507f608.png">
+        <img :src="showSmallPic || goodsItem.primaryPicUrl + '?quality=90&thumbnail=200x200&imageView'">
         <div>
           <span class="descTag">{{ goodsItem.promotionDesc }}</span>
           <div class="price">
@@ -136,7 +136,7 @@
       <div v-for="skutype in goodsItem.skuSpecList" :key="skutype.id" class="skutypeWrapper">
         <p class="title">{{ skutype.name }}</p>
         <ul>
-          <li v-for="(tagSku, index) in skutype.skuSpecValueList" :key="tagSku.id" @click="choicesku(skutype.name, tagSku.value, index)" :class="skutype.name">{{ tagSku.value}}</li>
+          <li v-for="(tagSku, index) in skutype.skuSpecValueList" :key="tagSku.id" @click="choicesku(skutype.name, tagSku.value, index, tagSku)" :class="skutype.name">{{ tagSku.value}}</li>
         </ul>
       </div>
       <div>
@@ -181,6 +181,7 @@ export default {
       addToCartParams: {},
       choosenResult: '',
       showSkuChoose: false,
+      showSmallPic: '',
       swiperOption: {
         notNextTick: true,
         loop: true,
@@ -273,7 +274,8 @@ export default {
         }
       })
     },
-    choicesku(type, value, index) {
+    choicesku(type, value, index, sku) {
+      console.log(sku)
       const doms = document.querySelectorAll(`.${type}`)
       let result = ''
       doms.forEach(ele => {
@@ -310,6 +312,10 @@ export default {
         component.hide()
       }, 1000)
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.showSkuChoose = false
+    next()
   },
   filters: {
     formatCommentNum(count) {
@@ -701,6 +707,7 @@ export default {
   background white
   bottom 0
   left 0
+  bottom 0
   z-index 1
   padding 30px 30px 30px 30px
   box-sizing border-box
@@ -761,8 +768,10 @@ export default {
     margin-top 40px
     height 96px
     display flex
-    line-height 96px
+    line-height 100px
     justify-content space-between
+    background-color white
+    z-index 99
     p
       flex-grow 1
       box-sizing border-box
