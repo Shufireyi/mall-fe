@@ -193,6 +193,7 @@ header
 .goodsWrapper
   background #fff
   padding-bottom 100px
+  padding-top 30px
   .goodItem
     vertical-align top
     &:nth-child(even)

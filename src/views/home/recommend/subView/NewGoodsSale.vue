@@ -187,7 +187,7 @@ export default {
       &.active i.down
         background-image url('http://yanxuan-static.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-a40f8bd193.png')
   .goodsWrapper
-    margin-top 10px
+    margin-top 30px
     .goodItem
       vertical-align top
       &:nth-child(even)

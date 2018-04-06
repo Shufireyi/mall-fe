@@ -2,7 +2,7 @@
   <div class="wrapper" v-if="totalGoodsNum">
     <div class="header">
       <div class="logo">
-        <img src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/indexLogo-11d65342f9.png" alt="">
+        <!-- <img src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/indexLogo-11d65342f9.png"> -->
         <div class="searchInput" @click="searchEvent">
           <p>
             <i class="fa fa-search" aria-hidden="true"></i>搜索商品,共{{totalGoodsNum}}款好物</p>
@@ -79,7 +79,8 @@ export default {
     margin-right 20px
   .searchInput
     text-align center
-    width 532px
+    // width 532px
+    width 100%
     height 56px
     float right
     background #eee

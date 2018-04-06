@@ -1,27 +1,33 @@
 <template>
-  <div class="outerWrapper">
-    <div class="searchInput">
-      <p>
-        <i class="fa fa-search" aria-hidden="true"></i>{{ keyword }}</p>
+  <scroll class="outerWrapper" ref="scroll" :data="serachAnswer" :pullup="true" @scrollToEnd="onPullingUp">
+    <div>
+      <div class="searchInput">
+        <router-link tag="p" :to="{name: 'SearchPage'}">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          {{ keyword }}
+        </router-link>
+      </div>
+      <div class="contition">
+        <span class="item active changeParamButton" @click.stop="changeParams(0)">综合</span>
+        <span class="item changeParamButton" @click.stop="changeParams(1)">价格
+          <i class="sortArrow"></i>
+        </span>
+      </div>
+      <div class="goodsWrapper" v-if="serachAnswer.length">
+        <good-info v-for="good in serachAnswer" :key="good.id" :good="good" class="goodItem"></good-info>
+      </div>
     </div>
-    <div class="contition">
-      <span class="item active changeParamButton" @click.stop="changeParams(0)">综合</span>
-      <span class="item changeParamButton" @click.stop="changeParams(1)">价格
-        <i class="sortArrow"></i>
-      </span>
-    </div>
-    <div class="goodsWrapper" v-if="serachAnswer.length">
-      <good-info v-for="good in serachAnswer" :key="good.id" :good="good" class="goodItem"></good-info>
-    </div>
-  </div>
+  </scroll>
 </template>
 
 <script>
 import searchAPI from '../service/homeOther'
 import GoodInfo from '../views/home/GoodInfo'
+import Scroll from '../components/Scroll'
 export default {
   components: {
-    GoodInfo
+    GoodInfo,
+    Scroll
   },
   data() {
     return {
@@ -42,15 +48,23 @@ export default {
       serachAnswer: []
     }
   },
+  watch: {
+    '$route': 'reFresh',
+    'params.sortType': 'reFresh',
+    'params.descSorted': 'reFresh'
+  },
   mounted() {
-    this.keyword = this.$route.params.keyword
-    this.params.keyword = this.$route.params.keyword
-    this.refresh()
+    this.reFresh()
   },
   methods: {
-    refresh() {
+    reFresh() {
+      if (!this.$route.params.keyword) {
+        this.serachAnswer = []
+        return
+      }
+      this.keyword = this.$route.params.keyword
+      this.params.keyword = this.$route.params.keyword
       searchAPI.searchGoodsByStr(this.params).then(res => {
-        console.log(res.data)
         if (res.data.errcode) {
           console.log(res.data)
         } else {
@@ -64,6 +78,39 @@ export default {
       })
     },
     changeParams(type) {
+      const buttonList = document.querySelectorAll('.changeParamButton')
+      buttonList.forEach(element => {
+        element.classList.remove('active')
+      })
+      buttonList[type].classList.add('active')
+      switch (type) {
+        case 0:
+          this.params.sortType = 0
+          break
+        case 1:
+          if (this.params.sortType === 1) {
+            this.params.descSorted = !this.params.descSorted
+            const temp1 = document.querySelectorAll('.sortArrow')[0]
+            temp1.classList.remove('down')
+            temp1.classList.remove('up')
+            if (this.params.descSorted) {
+              temp1.classList.add('down')
+            } else {
+              temp1.classList.add('up')
+            }
+          } else {
+            this.params.sortType = 1
+            this.params.descSorted = true
+            const temp2 = document.querySelectorAll('.sortArrow')[0]
+            temp2.classList.add('down')
+          }
+          break
+        default:
+          break
+      }
+    },
+    onPullingUp() {
+      console.log('asdvads')
     }
   }
 }
@@ -71,7 +118,8 @@ export default {
 
 <style lang="stylus" scoped>
 .outerWrapper
-  min-height 100vh
+  height 100vh
+  background-color #fff
 .searchInput
   display block
   box-sizing border-box
@@ -130,6 +178,7 @@ export default {
 .goodsWrapper
   background #fff
   padding-top 30px
+  padding-bottom  100px
   .goodItem
     vertical-align top
     &:nth-child(even)

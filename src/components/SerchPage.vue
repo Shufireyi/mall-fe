@@ -5,7 +5,7 @@
         <input v-model="searchWord" placeholder="关键字搜索" />
         <i class="fa fa-search" aria-hidden="true"></i>
       </p>
-      <span class="searchBtn">搜索</span>
+      <span class="searchBtn" @click="searchGoods">搜索</span>
     </div>
     <div class="searchResult" v-if="searchResult.length">
       <ul>
@@ -19,10 +19,13 @@
       <div class="hotKeyword">
         <header>热门搜索</header>
         <ul>
-          <li v-for="word in hotKeyWords" :key="word.keyword" :class="word.highlight ? 'highlight' : ''">{{word.keyword}}</li>
+          <li v-for="word in hotKeyWords" :key="word.keyword" :class="word.highlight ? 'highlight' : ''" @click="chooseHotkey(word.keyword)">{{word.keyword}}</li>
         </ul>
       </div>
     </div>
+    <cube-popup type="my-popup" ref="myPopup" :mask="false">
+      请输入关键字！
+    </cube-popup>
   </div>
 </template>
 
@@ -69,6 +72,31 @@ export default {
           console.log(res.data)
         } else {
           this.searchResult = res.data.data.data.slice(0, 10)
+        }
+      })
+    },
+    searchGoods() {
+      if (!this.searchWord) {
+        this.showPopup('myPopup')
+        return
+      }
+      this.$router.push({
+        name: 'SearchResultList',
+        params: { keyword: this.searchWord }
+      })
+    },
+    showPopup(refId) {
+      const component = this.$refs[refId]
+      component.show()
+      setTimeout(() => {
+        component.hide()
+      }, 1000)
+    },
+    chooseHotkey(keyWord) {
+      this.$router.push({
+        name: 'SearchResultList',
+        params: {
+          keyword: keyWord
         }
       })
     }
@@ -151,4 +179,16 @@ export default {
     &.highlight
       border-color rgb(180, 40, 45)
       color rgb(180, 40, 45)
+.cube-my-popup
+  top 50%
+  left 50%
+  padding-left 20px
+  background rgba(0, 0, 0, 0.5)
+  color #eee
+  width 280px
+  height 100px
+  border-radius 8px
+  transform translate3d(-140px,-50px,0)
+  text-align center
+  box-sizing border-box
 </style>
