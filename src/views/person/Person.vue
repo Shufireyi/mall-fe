@@ -3,9 +3,8 @@
     <header>
       <img src="http://yanxuan.nosdn.127.net/8945ae63d940cc42406c3f67019c5cb6.png" alt="avatar" class="avatar">
       <div class="info">
-        <p class="name">{{ userName }}</p>
-        <p class="userType">{{ userType }}</p>
-        <p class="login">点击登录</p>
+        <p class="name">{{ nickName }}</p>
+        <p class="userType">{{ userLevel === '1' ? '普通用户' : '黄金会员' }}</p>
       </div>
     </header>
     <div class="mainbody">
@@ -17,12 +16,14 @@
       </ul>
     </div>
     <footer>
-      <p class="logout">退出登录</p>
+      <p class="logout" @click="Logout">退出登录</p>
     </footer>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getUser } from '../../utils/cache'
 const fItem = [
   {
     iconClass: 'icon_dingdan',
@@ -55,11 +56,29 @@ const fItem = [
   }
 ]
 export default {
-  data () {
+  data() {
     return {
-      userName: 'aisudhfaisudh',
-      userType: '普通用户',
       fItem
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'nickName',
+      'avatar',
+      'userLevel'
+    ])
+  },
+  methods: {
+    Logout() {
+      localStorage.clear()
+      this.$router.push({ name: 'Home' })
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    if (!getUser().phone) {
+      window.location.href = '/login'
+    } else {
+      next()
     }
   }
 }

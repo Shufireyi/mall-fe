@@ -1,20 +1,17 @@
 <template>
   <b-scroll ref="scroll" :data="brandList" :pullup="true" @scrollToEnd="onPullingUp" class="wrapper">
     <div>
-      <router-link v-for="item in brandList" :key="item.id"
-        class="brandItem"
-        :to="{
-          name: 'BrandDetail',
-          params: {
-            id: item.id
-          },
-          query: {
-            appListPicUrl:item.appListPicUrl,
-            name: item.name,
-            simpleDesc: item.simpleDesc
-            }
-        }"
-        tag="div">
+      <router-link v-for="item in brandList" :key="item.id" class="brandItem" :to="{
+                      name: 'BrandDetail',
+                      params: {
+                        id: item.id
+                      },
+                      query: {
+                        appListPicUrl:item.appListPicUrl,
+                        name: item.name,
+                        simpleDesc: item.simpleDesc
+                        }
+                    }" tag="div">
         <div class="imgWrapper">
           <img v-lazy="item.appListPicUrl + '?imageView&quality=65'">
           <div class="triangle"></div>
@@ -58,7 +55,6 @@ export default {
     }
   },
   mounted() {
-    document.querySelectorAll('.navbar')[0].style.display = 'none'
     BrandAPI.getBrandList({
       limitOffset: 0,
       limitSize: 20
@@ -74,6 +70,9 @@ export default {
       }
       this.loading = false
     })
+  },
+  activated() {
+    document.querySelectorAll('.navbar')[0].style.bottom = '-98px'
   },
   methods: {
     onPullingUp() {
@@ -105,7 +104,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     next()
-    document.querySelectorAll('.navbar')[0].style.display = 'flex'
+    document.querySelectorAll('.navbar')[0].style.bottom = '0'
   }
 }
 </script>

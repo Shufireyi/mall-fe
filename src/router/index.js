@@ -94,6 +94,26 @@ export default new Router({
       component: () => import('../views/person/Person.vue')
     },
     {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../views/person/Login.vue')
+    },
+    {
+      path: '/logout',
+      name: 'Logout',
+      component: () => import('../views/person/Logout.vue')
+    },
+    {
+      path: '/forgetPwd',
+      name: 'ForgetPwd',
+      component: () => import('../views/person/ForgetPwd.vue')
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('../views/person/Registe.vue')
+    },
+    {
       path: '/brand',
       name: 'Brand',
       component: () => import('../views/home/recommend/subView/Brand.vue')

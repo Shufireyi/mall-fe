@@ -65,6 +65,7 @@ export default {
 
 <style lang="stylus">
 @import './utils/stylus/base.styl'
+@import './utils/stylus/reset.styl'
 * {
   padding 0
   margin 0

@@ -1,11 +1,6 @@
 <template>
   <div class="navbar">
-    <router-link
-      v-for="(link, index) in links"
-      :key="index"
-      class="navbar-link-item"
-      :class="link.class"
-      :to="{name:routerName(link)}">
+    <router-link v-for="(link, index) in links" :key="index" class="navbar-link-item" :class="link.class" :to="{name:routerName(link)}">
       <div class="icon"></div>
       <span class="name">{{ link.name }}</span>
     </router-link>
@@ -14,7 +9,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       active: 0,
       links: [{
@@ -35,11 +30,11 @@ export default {
       }]
     }
   },
-  mounted () {
+  mounted() {
     document.querySelectorAll('.navbar-link-item')[0].classList.add('active')
   },
   methods: {
-    routerName (item) {
+    routerName(item) {
       switch (item.name) {
         case '识物':
           return 'Shiwu'
@@ -71,6 +66,7 @@ export default {
   flex-flow row nowrap
   align-items center
   justify-content space-around
+  transition all .5s
 .navbar-link-item
   display inline-block
   vertical-align middle
