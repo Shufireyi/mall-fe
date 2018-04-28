@@ -55,7 +55,10 @@ export default {
   },
   methods: {
     SendMesg() {
-      console.log('短息')
+      UserAPI.setMesssage({
+        phoneNumber: this.phone,
+        type: true
+      })
     },
     register() {
       const pwd = this.$refs.pwd.value
@@ -73,10 +76,20 @@ export default {
           this.tip = res.data.message
           this.showPopup('myPopup')
         } else {
-          console.log(res.data)
+          this.tip = '注册成功'
+          this.showPopup('myPopup')
+          setTimeout(() => {
+            this.$router.push({
+              name: 'Login'
+            })
+          }, 500)
         }
       }).catch(e => {
         console.log(e)
+        if (e.data.errcode) {
+          this.tip = e.data.message
+          this.showPopup('myPopup')
+        }
       })
     },
     showPopup(refId) {
@@ -155,9 +168,8 @@ export default {
     outline none
     border none
 .cube-my-popup
-  top 50%
+  top 40%
   left 50%
-  padding-left 20px
   background rgba(0, 0, 0, 0.5)
   color #eee
   width 280px
@@ -166,4 +178,7 @@ export default {
   transform translate3d(-140px,-50px,0)
   text-align center
   box-sizing border-box
+  font-size 24px
+  line-height 36px
+  position fixed
 </style>

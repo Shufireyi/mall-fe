@@ -118,14 +118,15 @@ export default {
         tag: this.tag,
         page: this.page
       }).then(res => {
-        if (res.data.data.pagination.page === res.data.data.pagination.totalPage) {
+        if (res.data.data.pagination.page >= res.data.data.pagination.totalPage) {
           this.hasMore = false
           this.noData = true
+          this.canLoading = false
         } else {
           this.comments = this.comments.concat(res.data.data.result)
           this.show = true
+          this.canLoading = true
         }
-        this.canLoading = true
       })
     }
   }
