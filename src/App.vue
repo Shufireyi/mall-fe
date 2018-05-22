@@ -71,6 +71,12 @@ export default {
   margin 0
 }
 
+a:link,
+a:visited,
+a:hover,
+a:active
+  text-decoration none
+
 img {
   content normal !important
 }

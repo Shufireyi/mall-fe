@@ -25,9 +25,9 @@ instance.interceptors.response.use(
   response => {
     if (response.data.errcode) {
       if (response.data.errcode === 40002) {
-        // setTimeout(() => {
-        //   window.location.replace('/logout')
-        // }, 2000)
+        setTimeout(() => {
+          window.location.replace('/logout')
+        }, 200)
         console.log('跳转登出')
       }
       return Promise.reject(response)

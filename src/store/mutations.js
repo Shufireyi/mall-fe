@@ -36,6 +36,12 @@ const mutations = {
   },
   [types.CLEAR_CARTLIST](state) {
     state.cartList = []
+  },
+  [types.SET_ORDERLIST](state, orderList) {
+    state.orderList = orderList
+  },
+  [types.CLEAR_ORDERLIST](state) {
+    state.orderList = []
   }
 }
 

@@ -94,6 +94,21 @@ export default new Router({
       component: () => import('../views/person/Person.vue')
     },
     {
+      path: '/person/deliverAddressList',
+      name: 'deliverAddressList',
+      component: () => import('../views/person/futurePage/AddressManage.vue')
+    },
+    {
+      path: '/person/addDeliverAddresst',
+      name: 'addDeliverAddresst',
+      component: () => import('../views/person/futurePage/AddNewAddress.vue')
+    },
+    {
+      path: '/person/ordersList',
+      name: 'OrdersList',
+      component: () => import('../views/person/futurePage/OrdersManager.vue')
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import('../views/person/Login.vue')
@@ -132,6 +147,11 @@ export default new Router({
       path: '/goodscomment/:id',
       name: 'GoodsComment',
       component: () => import('../components/GoodsComment.vue')
+    },
+    {
+      path: '/takeOrder',
+      name: 'TakeOrder',
+      component: () => import('../components/TakeOrder.vue')
     },
     {
       path: '/newgoodssale',

@@ -14,18 +14,21 @@ import {
   // eslint-disable-next-line
   Style,
   Popup,
-  Rate
+  Rate,
+  CascadePicker,
+  Dialog,
+  Toast
 } from 'cube-ui'
-Vue.use(
-  VueLazyload,
-  {
-    // loading: require('./assets/default.jpg'),
-    // error: require('./assets/default.jpg')
-  }
-)
+Vue.use(VueLazyload, {
+  // loading: require('./assets/default.jpg'),
+  // error: require('./assets/default.jpg')
+})
 Vue.use(VueAwesomeSwiper)
 Vue.use(Popup)
 Vue.use(Rate)
+Vue.use(CascadePicker)
+Vue.use(Dialog)
+Vue.use(Toast)
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false

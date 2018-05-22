@@ -18,7 +18,7 @@
       <i class="iconfont icon-xiangyou"></i>
     </router-link>
     <cube-popup type="my-popup" ref="myPopup" :mask="false">
-      请确认输入！
+      {{ reminderText }}
     </cube-popup>
   </div>
 </template>
@@ -45,11 +45,11 @@ export default {
       Logo,
       phone: '',
       password: '',
-      showPwd: false
+      showPwd: false,
+      reminderText: '请确认输入！'
     }
   },
-  mounted() {
-  },
+  mounted() {},
   computed: {
     validatePhone() {
       if (this.phone.length <= 0) {
@@ -63,6 +63,7 @@ export default {
     Login() {
       var regex = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/
       if (!regex.test(this.phone)) {
+        this.reminderText = '请确认输入'
         this.showPopup('myPopup')
         return
       }
@@ -70,17 +71,25 @@ export default {
       UserAPI.login({
         phone: this.phone,
         password: pwd
-      }).then(res => {
-        if (res.data.errcode) {
-          console.log(res.data.message)
-        } else {
-          this.$store.dispatch('updateUser', saveUser(res.data.data.user))
-          this.setToken(saveToken(res.data.data.token))
-          this.$router.push({
-            name: 'Person'
-          })
-        }
       })
+        .then(res => {
+          if (res.data.errcode) {
+            console.log(res.data.message)
+          } else {
+            this.$store.dispatch('updateUser', saveUser(res.data.data.user))
+            this.setToken(saveToken(res.data.data.token))
+            this.$router.push({
+              name: 'Person'
+            })
+          }
+        })
+        .catch(e => {
+          if (e.data.errcode) {
+            console.log(e.data.message)
+            this.reminderText = '验证错误！'
+            this.showPopup('myPopup')
+          }
+        })
     },
     showPopup(refId) {
       const component = this.$refs[refId]
@@ -169,7 +178,6 @@ export default {
     margin-top 40px
     i
       font-size 28px
-
 .cube-my-popup
   top 50%
   left 50%
@@ -179,7 +187,7 @@ export default {
   width 280px
   height 100px
   border-radius 8px
-  transform translate3d(-140px,-50px,0)
+  transform translate3d(-140px, -50px, 0)
   text-align center
   box-sizing border-box
 </style>

@@ -146,7 +146,7 @@
       <div class="buttons">
         <!-- <p class="return" @click="showSkuChoose = false">返回</p> -->
         <p class="limitBy">立即购买</p>
-        <p class="addTotheCart">加入购物车</p>
+        <p class="addTotheCart" @click.stop="addToCart">加入购物车</p>
       </div>
       <cube-popup type="my-popup" ref="myPopup" :mask="false">
         不能再少啦！
@@ -160,6 +160,8 @@ import GoodsAPI from '../service/goods'
 import GoodInfo from '../views/home/GoodInfo'
 import Loading from './Loading'
 import NumberPicker from './NumberPicker'
+import { mapMutations } from 'vuex'
+import { saveUser, getUser } from '../utils/cache.js'
 export default {
   components: {
     GoodInfo,
@@ -209,12 +211,15 @@ export default {
     }
   },
   watch: {
-    '$route': 'refresh'
+    $route: 'refresh'
   },
   mounted() {
     this.refresh()
   },
   methods: {
+    ...mapMutations({
+      setCartList: 'SET_CARTLIST'
+    }),
     refresh() {
       if (!this.$route.params.id) {
         return
@@ -229,50 +234,60 @@ export default {
       this.rcmList = []
       this.choseType = null
       this.goodsId = this.$route.params.id
-      GoodsAPI.getGoodsDetailInfo(this.goodsId).then(res => {
-        if (res.data.errcode) {
-          console.log(res.data)
-        } else {
-          this.goodsItem = res.data.data.item
-          this.policyList = res.data.data.policyList
-          this.comment = res.data.data.item.comments
-          let tempArray = [res.data.data.item.primaryPicUrl]
-          for (var key in res.data.data.item.itemDetail) {
-            if (res.data.data.item.itemDetail.hasOwnProperty(key)) {
-              var element = res.data.data.item.itemDetail[key]
-              if (key.search('picUrl') > -1) {
-                tempArray.push(element)
+      GoodsAPI.getGoodsDetailInfo(this.goodsId)
+        .then(res => {
+          if (res.data.errcode) {
+            console.log(res.data)
+          } else {
+            this.goodsItem = res.data.data.item
+            this.policyList = res.data.data.policyList
+            this.comment = res.data.data.item.comments
+            let tempArray = [res.data.data.item.primaryPicUrl]
+            for (var key in res.data.data.item.itemDetail) {
+              if (res.data.data.item.itemDetail.hasOwnProperty(key)) {
+                var element = res.data.data.item.itemDetail[key]
+                if (key.search('picUrl') > -1) {
+                  tempArray.push(element)
+                }
               }
             }
-          }
-          this.bannerData = tempArray
-          let tempDetailImg = []
-          this.goodsItem.itemDetail.detailHtml.match(/_src="(\S)*"/g).forEach(item => {
-            tempDetailImg = tempDetailImg.concat(item.slice(6, item.length - 1))
-          })
-          this.detailImg = tempDetailImg
-          this.goodsItem.skuSpecList.forEach(ele => {
-            let name = ele.name
-            this.addToCartParams = Object.assign(this.addToCartParams, {
-              [name]: ''
+            this.bannerData = tempArray
+            let tempDetailImg = []
+            this.goodsItem.itemDetail.detailHtml
+              .match(/_src="(\S)*"/g)
+              .forEach(item => {
+                tempDetailImg = tempDetailImg.concat(
+                  item.slice(6, item.length - 1)
+                )
+              })
+            this.detailImg = tempDetailImg
+            this.goodsItem.skuSpecList.forEach(ele => {
+              let name = ele.name
+              this.addToCartParams = Object.assign(this.addToCartParams, {
+                [name]: ''
+              })
             })
-          })
-        }
-      })
-      GoodsAPI.goodrates(this.goodsId).then(res => {
-        if (res.data.errcode) {
-          console.log(res.data)
-        } else {
-          this.goodRates = res.data.data.data
-        }
-      })
-      GoodsAPI.getGoodsRcmList(this.goodsId).then(res => {
-        if (res.data.errcode) {
-          console.log(res.data)
-        } else {
-          this.rcmList = res.data.data
-        }
-      })
+          }
+        })
+        .catch(e => {})
+      GoodsAPI.goodrates(this.goodsId)
+        .then(res => {
+          if (res.data.errcode) {
+            console.log(res.data)
+          } else {
+            this.goodRates = res.data.data.data
+          }
+        })
+        .catch(e => {})
+      GoodsAPI.getGoodsRcmList(this.goodsId)
+        .then(res => {
+          if (res.data.errcode) {
+            console.log(res.data)
+          } else {
+            this.rcmList = res.data.data
+          }
+        })
+        .catch(e => {})
     },
     choicesku(type, value, index, sku) {
       console.log(sku)
@@ -311,6 +326,51 @@ export default {
       setTimeout(() => {
         component.hide()
       }, 1000)
+    },
+    addToCart() {
+      let skumap = []
+      let flagsku = false
+      for (const key in this.addToCartParams) {
+        if (this.addToCartParams.hasOwnProperty(key)) {
+          const element = this.addToCartParams[key]
+          skumap.push({
+            specName: key,
+            specValue: element
+          })
+          if (!element) {
+            flagsku = true
+          }
+        }
+      }
+      if (flagsku) {
+        const toast = this.$createToast({
+          txt: '请选择商品参数!',
+          type: 'warn'
+        })
+        toast.show()
+        return
+      }
+      var temp = {
+        goodsId: this.goodsId,
+        goodsName: this.goodsItem.name,
+        picUrl:
+          this.goodsItem.primaryPicUrl +
+          '?quality=90&thumbnail=200x200&imageView',
+        price: this.goodsItem.retailPrice,
+        skumap: skumap,
+        number: this.goodsNumber,
+        checked: true
+      }
+      let userInfo = getUser()
+      userInfo.cartList = userInfo.cartList.concat([temp])
+      this.setCartList(userInfo.cartList)
+      saveUser(userInfo)
+      this.showSkuChoose = false
+      const toast = this.$createToast({
+        txt: '已加入购物车!',
+        type: 'correct'
+      })
+      toast.show()
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -356,8 +416,8 @@ export default {
     width 72px
     border-radius 50%
   .desc
-      margin-left 12px
-    p
+    margin-left 12px
+  p
     line-height 32px
     font-size 28px
     color #333
@@ -369,9 +429,7 @@ export default {
   padding 40px 0 40px 30px
   margin-bottom 20px
   background white
-  height 206px
   .name
-    // height 54px
     padding-right 10px
     margin-bottom 5px
     line-height 54px
@@ -592,7 +650,7 @@ export default {
       padding 10px 30px 10px 0
       border-top 1px dashed #cfcfcf
       box-sizing border-box
-    .name,.value
+    .name, .value
       // display inline-block
       line-height 44px
       font-size 24px
@@ -696,7 +754,7 @@ export default {
   left 0
   bottom 0
   right 0
-  background-color rgba(0, 0, 0, .4)
+  background-color rgba(0, 0, 0, 0.4)
   z-index 1
   -webkit-backdrop-filter blur(5px)
   backdrop-filter blur(5px)
@@ -718,7 +776,7 @@ export default {
     img
       width 170px
       height 170px
-      background-color rgb(244,244, 244)
+      background-color rgb(244, 244, 244)
       margin-right 20px
     .descTag
       display inline-block
@@ -797,7 +855,7 @@ export default {
   width 280px
   height 100px
   border-radius 8px
-  transform translate3d(-140px,-50px,0)
+  transform translate3d(-140px, -50px, 0)
   text-align center
   box-sizing border-box
 </style>

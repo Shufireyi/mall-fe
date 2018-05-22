@@ -41,7 +41,6 @@ export default {
   },
   mounted() {
     SerchAPi.getSearchInit().then(res => {
-      console.log(res.data)
       if (res.data.errcode) {
         console.log(res.data)
       } else {

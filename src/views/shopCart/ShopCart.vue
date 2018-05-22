@@ -2,7 +2,7 @@
   <div class="shopcart">
     <header>
       购物车
-      <span class="edit" v-if="goodsList.length > 0">编辑</span>
+      <!-- <span class="edit" v-if="cartList.length > 0">编辑</span> -->
     </header>
     <div class="ad" v-if="totalCost < 88">
       <span class="adItem">
@@ -16,18 +16,16 @@
       已满足免邮条件
     </div>
     <transition name="fade" mode="out-in">
-      <div v-if="goodsList.length > 0" key="hasGoods">
-        <transition-group name="deleteGoodsItem" tag="ul" class="goodsList">
-          <li v-for="(goodsItem, index) in goodsList" :key="goodsItem.itemId" @touchstart="touchStartHandler(index)" @touchmove="touchmoveHandler(index)" class="goodsItem" ref="goodsItem">
+      <div v-if="cartList.length > 0" key="hasGoods">
+        <transition-group name="deleteGoodsItem" tag="ul" class="cartList">
+          <li v-for="(goodsItem, index) in cartList" :key="`${goodsItem.goodsId}${index}`" @touchstart="touchStartHandler(index)" @touchmove="touchmoveHandler(index)" class="goodsItem" ref="goodsItem">
             <i class="checkoutBox" :class="goodsItem.checked ? 'checked' : ''" @click="toggleChecked(goodsItem, index)" ref="goodsItemCheckBox"></i>
-            <img v-lazy="goodsItem.pic + '?imageView&thumbnail=160x0&quality=75'">
+            <img v-lazy="goodsItem.picUrl + '?imageView&thumbnail=160x0&quality=75'">
             <div class="info">
-              <p class="name">{{ goodsItem.itemName }}</p>
-              <p class="kind">{{ goodsItem.specList[0].specValue }}</p>
-              <p class="price">&yen;{{ goodsItem.actualPrice | formatPrice }}</p>
-              <number-picker :number="goodsItem.cnt" class="numberPicker"
-                @minus="minusGoodsNum(goodsItem, index)"
-                @add="addGoodsNum(goodsItem, index)"></number-picker>
+              <p class="name">{{ goodsItem.goodsName }}</p>
+              <p class="kind" v-for="sku in goodsItem.skumap" :key="sku.specValue">{{ sku.specValue }}</p>
+              <p class="price">&yen;{{ goodsItem.price | formatPrice }}</p>
+              <number-picker :number="goodsItem.number" class="numberPicker" @minus="minusGoodsNum(goodsItem, index)" @add="addGoodsNum(goodsItem, index)"></number-picker>
             </div>
             <div class="deleteItem" @click="deleteGoodItem(goodsItem, index)">
               <i></i>
@@ -40,7 +38,7 @@
           <span class="selectedNum">已选({{ totalCount }})</span>
           <div>
             <span class="price">&yen;{{ totalCost | formatPrice }}</span>
-            <button class="takeOrder" :class="totalCount > 0 ? 'canTakeOrder' : ''" :disabled="totalCount > 0 ? false : true">下单</button>
+            <button class="takeOrder" :class="totalCount > 0 ? 'canTakeOrder' : ''" :disabled="totalCount > 0 ? false : true" @click.stop="goTakeOrder">下单</button>
           </div>
         </div>
       </div>
@@ -54,53 +52,21 @@
 
 <script>
 import NumberPicker from '../../components/NumberPicker'
-const goodsList = [
-  {
-    actualPrice: 1599,
-    itemId: 1497001,
-    itemName: '智能马桶盖',
-    limitPurchaseCount: 0,
-    limitPurchaseFlag: false,
-    pic: 'http://yanxuan.nosdn.127.net/e1d26a4afb53d3eb0827f76fb13bdade.png',
-    specList: [{ specName: '颜色', specValue: '白色' }],
-    checked: true,
-    cnt: 1
-  }, {
-    actualPrice: 249,
-    itemId: 1113019,
-    itemName: '20寸PC膜拉链登机箱',
-    limitPurchaseCount: 0,
-    limitPurchaseFlag: false,
-    pic: 'http://yanxuan.nosdn.127.net/cbe1741ac4ade4e39572e03027329747.png',
-    specList: [{ specName: '颜色', specValue: '红色' }],
-    checked: true,
-    cnt: 1
-  },
-  {
-    actualPrice: 1599,
-    itemId: 149700,
-    itemName: '智能马桶盖',
-    limitPurchaseCount: 0,
-    limitPurchaseFlag: false,
-    pic: 'http://yanxuan.nosdn.127.net/e1d26a4afb53d3eb0827f76fb13bdade.png',
-    specList: [{ specName: '颜色', specValue: '白色' }],
-    checked: true,
-    cnt: 1
-  }
-]
+import { mapGetters, mapMutations } from 'vuex'
+import { saveUser, getUser } from '../../utils/cache'
+
 export default {
   components: {
     NumberPicker
   },
   data() {
-    return {
-      goodsList
-    }
+    return {}
   },
   computed: {
+    ...mapGetters(['cartList']),
     totalCount() {
       let i = 0
-      this.goodsList.forEach(item => {
+      this.cartList.forEach(item => {
         if (item.checked) {
           i++
         }
@@ -109,15 +75,15 @@ export default {
     },
     totalCost() {
       let totalCost = 0
-      this.goodsList.forEach(item => {
+      this.cartList.forEach(item => {
         if (item.checked) {
-          totalCost += item.actualPrice * item.cnt
+          totalCost += item.price * item.number
         }
       })
       return totalCost
     },
     checkedAll() {
-      return this.totalCount === this.goodsList.length && this.totalCount !== 0
+      return this.totalCount === this.cartList.length && this.totalCount !== 0
     }
   },
   methods: {
@@ -142,31 +108,80 @@ export default {
       }
     },
     deleteGoodItem(goods, index) {
-      this.goodsList.splice(index, 1)
+      let temp = this.cartList
+        .slice(0, index)
+        .concat(this.cartList.slice(index + 1))
+      let userInfo = getUser()
+      userInfo.cartList = temp
+      saveUser(userInfo)
+      this.setCartList(temp)
     },
     toggleChecked(goods, index) {
-      this.goodsList[index].checked = !this.goodsList[index].checked
+      let temp = {
+        ...this.cartList[index]
+      }
+      temp.checked = !temp.checked
+      let userInfo = getUser()
+      userInfo.cartList[index] = temp
+      saveUser(userInfo)
+      this.setCartList(
+        this.cartList
+          .slice(0, index)
+          .concat(temp, this.cartList.slice(index + 1))
+      )
     },
     checkedALL() {
-      if (this.totalCount === this.goodsList.length) {
-        this.goodsList.forEach(item => {
+      let temp = []
+      this.cartList.forEach(item => {
+        temp.push({
+          ...item
+        })
+      })
+      if (this.totalCount === this.cartList.length) {
+        temp.forEach(item => {
           item.checked = false
         })
       } else {
-        this.goodsList.forEach(item => {
+        temp.forEach(item => {
           item.checked = true
         })
       }
+      let userInfo = getUser()
+      userInfo.cartList = temp
+      saveUser(userInfo)
+      this.setCartList(temp)
     },
     minusGoodsNum(goodsItem, index) {
-      if (this.goodsList[index].cnt > 1) {
-        this.goodsList[index].cnt--
+      if (this.cartList[index].number > 1) {
+        let temp = {
+          ...this.cartList[index]
+        }
+        temp.number--
+        this.setCartList(
+          this.cartList
+            .slice(0, index)
+            .concat(temp, this.cartList.slice(index + 1))
+        )
+        let userInfo = getUser()
+        userInfo.cartList[index] = temp
+        saveUser(userInfo)
       } else {
         this.showPopup('myPopup')
       }
     },
     addGoodsNum(goodsItem, index) {
-      this.goodsList[index].cnt++
+      let temp = {
+        ...this.cartList[index]
+      }
+      temp.number++
+      this.setCartList(
+        this.cartList
+          .slice(0, index)
+          .concat(temp, this.cartList.slice(index + 1))
+      )
+      let userInfo = getUser()
+      userInfo.cartList[index] = temp
+      saveUser(userInfo)
     },
     showPopup(refId) {
       const component = this.$refs[refId]
@@ -174,7 +189,18 @@ export default {
       setTimeout(() => {
         component.hide()
       }, 1000)
-    }
+    },
+    goTakeOrder() {
+      this.$router.push({
+        name: 'TakeOrder',
+        params: {
+          goodsList: this.cartList.filter(item => item.checked)
+        }
+      })
+    },
+    ...mapMutations({
+      setCartList: 'SET_CARTLIST'
+    })
   }
 }
 </script>
@@ -221,7 +247,7 @@ header
   color #f48f18
   line-height 70px
   font-size 28px
-.goodsList
+.cartList
   margin-bottom 196px
   .goodsItem
     display flex
@@ -231,7 +257,7 @@ header
     position relative
     align-items center
     height 208px
-    transition all .4s
+    transition all 0.4s
     .bottomLine
       position absolute
       height 1px
@@ -271,6 +297,8 @@ header
         text-overflow ellipsis
         white-space nowrap
       .kind
+        display inline-block
+        margin-right 20px
         height 27px
         margin-bottom 28px
         color #666
@@ -361,14 +389,13 @@ header
   opacity 0
   transform translate3d(100vw, 0, 0)
 .deleteGoodsItemt-move
-  transition all .4s
+  transition all 0.4s
 .deleteGoodsItem-leave-active
-  position absolute!important
+  position absolute !important
 .fade-enter-active, .fade-leave-active
-  transition all .2s
+  transition all 0.2s
 .fade-enter, .fade-leave-to
   opacity 0
-
 .cube-my-popup
   top 50%
   left 50%
@@ -378,7 +405,7 @@ header
   width 280px
   height 100px
   border-radius 8px
-  transform translate3d(-140px,-50px,0)
+  transform translate3d(-140px, -50px, 0)
   text-align center
   box-sizing border-box
 </style>

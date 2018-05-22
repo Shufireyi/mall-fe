@@ -9,7 +9,7 @@
     </header>
     <div class="mainbody">
       <ul class="fList">
-        <li v-for="(item, index) in  fItem" :key="index" class="fItem">
+        <li v-for="(item, index) in  fItem" :key="index" class="fItem" @click.stop="jumpIntoDetailPage(item.link)">
           <div class="icon" :class="item.iconClass"></div>
           <p class="title">{{ item.title }}</p>
         </li>
@@ -28,28 +28,34 @@ const fItem = [
   {
     iconClass: 'icon_dingdan',
     title: '我的订单',
-    link: ''
-  }, {
+    link: 'OrdersList'
+  },
+  {
+    iconClass: 'icon_dizhi',
+    title: '地址管理',
+    link: 'deliverAddressList'
+  },
+  {
     iconClass: 'icon_youhui',
     title: '优惠券',
     link: ''
-  }, {
-    iconClass: 'icon_dizhi',
-    title: '地址管理',
-    link: ''
-  }, {
+  },
+  {
     iconClass: 'icon_safe',
     title: '账号安全',
     link: ''
-  }, {
+  },
+  {
     iconClass: 'icon_help',
     title: '帮助中心',
     link: ''
-  }, {
+  },
+  {
     iconClass: 'icon_yijian',
     title: '意见反馈',
     link: ''
-  }, {
+  },
+  {
     iconClass: 'icon_shouhou',
     title: '售后服务',
     link: ''
@@ -62,16 +68,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'nickName',
-      'avatar',
-      'userLevel'
-    ])
+    ...mapGetters(['nickName', 'avatar', 'userLevel'])
   },
   methods: {
     Logout() {
       localStorage.clear()
       this.$router.push({ name: 'Home' })
+    },
+    jumpIntoDetailPage(link) {
+      this.$router.push({
+        name: link
+      })
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -90,7 +97,7 @@ export default {
   min-height 100vh
 header
   height 270px
-  padding  0 30px
+  padding 0 30px
   box-sizing border-box
   display flex
   align-items center
@@ -108,7 +115,7 @@ header
       padding 10px 0
     .name
       color white
-      font-family PingFangSC-Light,helvetica,'Heiti SC'
+      font-family PingFangSC-Light, helvetica, 'Heiti SC'
       font-size 42px
       margin-bottom 10px
     .userType
@@ -129,8 +136,8 @@ header
   .fItem
     display inline-block
     width 33.33333%
-    border-right 1px solid rgba(0,0,0,.15)
-    border-bottom 1px solid rgba(0,0,0,.15)
+    border-right 1px solid rgba(0, 0, 0, 0.15)
+    border-bottom 1px solid rgba(0, 0, 0, 0.15)
     box-sizing border-box
     height 180px
     padding-top 45px
