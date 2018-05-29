@@ -1,7 +1,30 @@
 # mall-fe
 
 > A Vue.js project
-> 高访网易严选
+
+> 高仿网易严选
+
+##技术栈
+
+>前端主要使用到Vue.js + Vue-Router + Vuex + axios
+
+>后台采用Node.js + Express + MongoDB
+
+>权限验证采用jsonwebToken
+
+##半成品截图
+
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/301527563563_.pic.jpg)
+ 
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/311527563564_.pic.jpg)
+ 
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/331527563565_.pic.jpg)
+ 
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/351527563566_.pic.jpg)
+ 
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/371527563566_.pic.jpg)
+ 
+ ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/421527563577_.pic.jpg)
 
 ## Build Setup
 
