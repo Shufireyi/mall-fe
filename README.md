@@ -4,15 +4,15 @@
 
 > 高仿网易严选
 
-##技术栈
+## 技术栈
 
->前端主要使用到Vue.js + Vue-Router + Vuex + axios
+> 前端主要使用到Vue.js + Vue-Router + Vuex + axios
 
->后台采用Node.js + Express + MongoDB
+> 后台采用Node.js + Express + MongoDB
 
->权限验证采用jsonwebToken
+> 权限验证采用jsonwebToken
 
-##半成品截图
+## 半成品截图
 
  ![Image text](https://raw.githubusercontent.com/Shufireyi/mall-fe/master/readmeImg/301527563563_.pic.jpg)
  
